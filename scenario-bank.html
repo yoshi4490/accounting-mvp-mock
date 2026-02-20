@@ -48,6 +48,7 @@
         <div class="body">
           <h2>通帳明細と元帳の突合</h2>
           <p class="muted">差異は発生日・金額・摘要から原因を特定し、仕訳起票または理由記録でクローズします。</p>
+          <div class="table-scroll">
           <table class="table">
             <thead><tr><th>日付</th><th>通帳摘要</th><th class="num">通帳</th><th class="num">帳簿</th><th class="num">差異</th><th>状態</th><th>備考</th></tr></thead>
             <tbody>
@@ -59,6 +60,7 @@
               <tr><td>2026-02-09</td><td>東都デザイン 送金</td><td class="num">-42,000</td><td class="num">-42,000</td><td class="num">0</td><td><span class="status ok">一致</span></td><td>BILL-012</td></tr>
             </tbody>
           </table>
+          </div>
         </div>
       </section>
 
@@ -66,12 +68,14 @@
         <article class="card">
           <div class="body">
             <h3>差異対応メモ</h3>
+            <div class="table-scroll">
             <table class="table">
               <thead><tr><th>差異ID</th><th>内容</th><th>推奨仕訳</th><th>状態</th></tr></thead>
               <tbody>
                 <tr><td>BK-001</td><td>振込手数料 330円</td><td>支払手数料 330 / 普通預金 330</td><td><span class="status ng">未起票</span></td></tr>
               </tbody>
             </table>
+            </div>
             <div class="note" style="margin-top: 10px;">この差異を起票すると銀行照合は完了（差異0件）になります。</div>
           </div>
         </article>
@@ -79,6 +83,7 @@
         <article class="card">
           <div class="body">
             <h3>照合ログ</h3>
+            <div class="table-scroll">
             <table class="table">
               <thead><tr><th>日時</th><th>処理</th><th>結果</th></tr></thead>
               <tbody>
@@ -87,6 +92,7 @@
                 <tr><td>2026-02-20 10:05</td><td>差異原因特定</td><td><span class="status ok">仕訳漏れ判明</span></td></tr>
               </tbody>
             </table>
+            </div>
           </div>
         </article>
       </section>

@@ -45,6 +45,7 @@
         <article class="card">
           <div class="body">
             <h2>買掛一覧</h2>
+            <div class="table-scroll">
             <table class="table">
               <thead><tr><th></th><th>請求No</th><th>仕入先</th><th>支払期日</th><th class="num">残高</th><th>状態</th></tr></thead>
               <tbody>
@@ -54,12 +55,14 @@
                 <tr><td><input type="checkbox" /></td><td>BILL-014</td><td>オフィス百貨</td><td>2026-02-15</td><td class="num">35,000</td><td><span class="status pending">未消込</span></td></tr>
               </tbody>
             </table>
+            </div>
           </div>
         </article>
 
         <article class="card">
           <div class="body">
             <h2>支払明細</h2>
+            <div class="table-scroll">
             <table class="table">
               <thead><tr><th></th><th>支払日</th><th>先方名義</th><th class="num">支払額</th><th>候補請求</th></tr></thead>
               <tbody>
@@ -69,6 +72,7 @@
                 <tr><td><input type="checkbox" /></td><td>2026-02-14</td><td>オフィス百貨</td><td class="num">35,000</td><td>BILL-014</td></tr>
               </tbody>
             </table>
+            </div>
             <div class="note" style="margin-top: 10px;">BILL-012/BILL-014 は翌月支払。月末締めでは「期日未到来のため未消込」を記録して繰越。</div>
           </div>
         </article>
@@ -77,6 +81,7 @@
       <section class="card" style="margin-top: 14px;">
         <div class="body">
           <h3>支払消込ログ</h3>
+          <div class="table-scroll">
           <table class="table">
             <thead><tr><th>日時</th><th>請求No</th><th>処理</th><th>結果</th></tr></thead>
             <tbody>
@@ -85,6 +90,7 @@
               <tr><td>2026-02-20 09:29</td><td>BILL-012</td><td>締め時点判定</td><td><span class="status pending">次月繰越</span></td></tr>
             </tbody>
           </table>
+          </div>
         </div>
       </section>
     </main>

@@ -56,6 +56,7 @@
             <div><label>ステータス</label><input type="text" value="下書き" /></div>
           </div>
 
+          <div class="table-scroll">
           <table class="table">
             <thead><tr><th>行</th><th>勘定科目</th><th class="num">借方</th><th class="num">貸方</th><th>税区分</th><th>操作</th></tr></thead>
             <tbody>
@@ -77,6 +78,7 @@
               </tr>
             </tbody>
           </table>
+          </div>
 
           <div class="panel-actions" style="margin-top: 10px;">
             <button class="btn">+ 明細行を追加</button>
@@ -91,6 +93,7 @@
         <article class="card">
           <div class="body">
             <h3>入力済み仕訳一覧（抜粋）</h3>
+            <div class="table-scroll">
             <table class="table">
               <thead><tr><th>No</th><th>日付</th><th>摘要</th><th>借方</th><th>貸方</th><th class="num">金額</th><th>採点</th></tr></thead>
               <tbody>
@@ -101,12 +104,14 @@
                 <tr><td>JE-012</td><td>2026-01-31</td><td>減価償却</td><td>減価償却費</td><td>工具器具備品</td><td class="num">4,000</td><td><span class="status ok">正解</span></td></tr>
               </tbody>
             </table>
+            </div>
           </div>
         </article>
 
         <article class="card">
           <div class="body">
             <h3>未入力/要修正</h3>
+            <div class="table-scroll">
             <table class="table">
               <thead><tr><th>証憑No</th><th>内容</th><th>状態</th><th>メモ</th><th>対応</th></tr></thead>
               <tbody>
@@ -117,6 +122,7 @@
                 <tr><td>JE-011</td><td>銀行手数料</td><td><span class="status ng">未起票</span></td><td>差異 330円</td><td><a class="btn" href="scenario-bank.html">起票</a></td></tr>
               </tbody>
             </table>
+            </div>
           </div>
         </article>
       </section>
