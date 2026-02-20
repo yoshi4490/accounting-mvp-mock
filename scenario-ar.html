@@ -45,6 +45,7 @@
         <article class="card">
           <div class="body">
             <h2>売掛一覧</h2>
+            <div class="table-scroll">
             <table class="table">
               <thead><tr><th></th><th>請求No</th><th>取引先</th><th>請求日</th><th>期日</th><th class="num">残高</th><th>状態</th></tr></thead>
               <tbody>
@@ -53,12 +54,14 @@
                 <tr><td><input type="checkbox" checked /></td><td>INV-003</td><td>三光企画</td><td>2026-01-25</td><td>2026-02-28</td><td class="num">95,000</td><td><span class="status ok">消込済</span></td></tr>
               </tbody>
             </table>
+            </div>
           </div>
         </article>
 
         <article class="card">
           <div class="body">
             <h2>入金明細</h2>
+            <div class="table-scroll">
             <table class="table">
               <thead><tr><th></th><th>入金日</th><th>名義</th><th class="num">入金額</th><th>候補請求</th></tr></thead>
               <tbody>
@@ -67,6 +70,7 @@
                 <tr><td><input type="checkbox" checked /></td><td>2026-02-27</td><td>三光企画(ｶ</td><td class="num">95,000</td><td>INV-003</td></tr>
               </tbody>
             </table>
+            </div>
             <div class="note" style="margin-top: 10px;">INV-002 は期日後入金（2/4）想定。月末締め時点では未消込理由を記録して次月へ繰越。</div>
           </div>
         </article>
@@ -75,6 +79,7 @@
       <section class="card" style="margin-top: 14px;">
         <div class="body">
           <h3>消込ログ</h3>
+          <div class="table-scroll">
           <table class="table">
             <thead><tr><th>日時</th><th>請求No</th><th>処理</th><th>結果</th></tr></thead>
             <tbody>
@@ -83,6 +88,7 @@
               <tr><td>2026-02-20 09:21</td><td>INV-002</td><td>締め時点判定</td><td><span class="status pending">次月繰越</span></td></tr>
             </tbody>
           </table>
+          </div>
         </div>
       </section>
     </main>

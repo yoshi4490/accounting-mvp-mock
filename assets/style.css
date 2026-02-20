@@ -346,6 +346,16 @@ p {
   font-size: 14px;
 }
 
+.table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-scroll .table {
+  min-width: 560px;
+}
+
 .table th,
 .table td {
   border-bottom: 1px solid #e4eeea;
@@ -658,3 +668,38 @@ textarea:focus {
   }
 }
 
+@media (max-width: 640px) {
+  .main {
+    padding: 14px;
+  }
+
+  .topbar {
+    margin: -14px -14px 14px;
+    padding: 10px 14px;
+  }
+
+  .card .body {
+    padding: 14px;
+  }
+
+  .kpi {
+    font-size: 26px;
+  }
+
+  h1 {
+    font-size: 23px;
+  }
+
+  .panel-actions {
+    flex-direction: column;
+  }
+
+  .panel-actions .btn {
+    width: 100%;
+  }
+
+  .badge {
+    width: 100%;
+    justify-content: center;
+  }
+}
