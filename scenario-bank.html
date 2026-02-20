@@ -1,10 +1,10 @@
-﻿﻿<!doctype html>
+﻿<!doctype html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>銀行照合 | 経理実務シミュレーション</title>
-  <link rel="stylesheet" href="assets/style.css?v=20260220d" />
+  <link rel="stylesheet" href="assets/style.css?v=20260220e" />
 </head>
 <body>
   <div class="layout">
@@ -32,48 +32,103 @@
       </nav>
     </aside>
 
-    <main class="main">
+    <main class="main" data-bank-root>
       <div class="topbar">
         <div>
           <span class="badge">銀行照合</span>
-          <span class="badge ghost">一致 5件 / 差異 1件</span>
-          <span class="badge ghost">差異金額: 330円</span>
+          <span class="badge ghost" data-bank-badge-match>一致 0 / 0</span>
+          <span class="badge ghost" data-bank-badge-open>未解決 0件</span>
+          <span class="badge ghost" data-bank-badge-diff>未解決金額 0円</span>
         </div>
         <div class="panel-actions">
-          <button class="btn warn">差異仕訳を起票</button>
-          <a class="btn" href="scenario-close.html">締めチェックへ</a>
+          <button class="btn" data-bank-auto-match>自動突合</button>
+          <button class="btn" data-bank-reload>元帳を再読込</button>
+          <a class="btn primary" href="scenario-close.html">締めチェックへ</a>
         </div>
       </div>
 
       <section class="card">
         <div class="body">
-          <h2>通帳明細と元帳の突合</h2>
-          <p class="muted">差異は発生日・金額・摘要から原因を特定し、仕訳起票または理由記録でクローズします。</p>
-          <table class="table">
-            <thead><tr><th>日付</th><th>通帳摘要</th><th class="num">通帳</th><th class="num">帳簿</th><th class="num">差異</th><th>状態</th><th>備考</th></tr></thead>
-            <tbody>
-              <tr><td>2026-01-29</td><td>Studio K 送金</td><td class="num">-60,000</td><td class="num">-60,000</td><td class="num">0</td><td><span class="status ok">一致</span></td><td>BILL-011</td></tr>
-              <tr><td>2026-01-30</td><td>青葉商事 入金</td><td class="num">120,000</td><td class="num">120,000</td><td class="num">0</td><td><span class="status ok">一致</span></td><td>INV-001</td></tr>
-              <tr><td>2026-01-31</td><td>クラウド印刷 送金</td><td class="num">-35,000</td><td class="num">-35,000</td><td class="num">0</td><td><span class="status ok">一致</span></td><td>BILL-013</td></tr>
-              <tr><td>2026-01-31</td><td>振込手数料</td><td class="num">-330</td><td class="num">0</td><td class="num">-330</td><td><span class="status ng">未処理</span></td><td>仕訳漏れ</td></tr>
-              <tr><td>2026-02-04</td><td>北川工業 入金</td><td class="num">88,000</td><td class="num">88,000</td><td class="num">0</td><td><span class="status ok">一致</span></td><td>INV-002</td></tr>
-              <tr><td>2026-02-09</td><td>東都デザイン 送金</td><td class="num">-42,000</td><td class="num">-42,000</td><td class="num">0</td><td><span class="status ok">一致</span></td><td>BILL-012</td></tr>
-            </tbody>
-          </table>
+          <h2>銀行照合のやること</h2>
+          <div class="bank-task-grid">
+            <div class="check-item"><strong>1.</strong> 通帳明細から1件選択</div>
+            <div class="check-item"><strong>2.</strong> 普通預金元帳の候補を1件選択</div>
+            <div class="check-item"><strong>3.</strong> 金額・日付を確認して「選択2件を照合」</div>
+            <div class="check-item"><strong>4.</strong> 一致しないものは差異理由を登録して対応</div>
+          </div>
+          <div class="note" style="margin-top: 10px;" data-bank-message>通帳明細と普通預金元帳を選択して照合してください。</div>
         </div>
       </section>
 
       <section class="grid two" style="margin-top: 14px;">
         <article class="card">
           <div class="body">
-            <h3>差異対応メモ</h3>
+            <h3>通帳明細（銀行）</h3>
+            <div class="bank-table-wrap">
+              <table class="table">
+                <thead><tr><th>選択</th><th>日付</th><th>摘要</th><th class="num">金額</th><th>状態</th></tr></thead>
+                <tbody data-bank-statement-body>
+                  <tr><td colspan="5" class="muted">読込中...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="body">
+            <h3>普通預金元帳（帳簿）</h3>
+            <div class="bank-table-wrap">
+              <table class="table">
+                <thead><tr><th>選択</th><th>日付</th><th>摘要</th><th class="num">金額</th><th>状態</th></tr></thead>
+                <tbody data-bank-ledger-body>
+                  <tr><td colspan="5" class="muted">読込中...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="card" style="margin-top: 14px;">
+        <div class="body">
+          <h3>照合操作</h3>
+          <div class="bank-ops-grid">
+            <div>
+              <p class="muted">選択中 通帳: <strong data-bank-selected-statement>-</strong></p>
+              <p class="muted">選択中 元帳: <strong data-bank-selected-ledger>-</strong></p>
+              <div class="panel-actions">
+                <button class="btn primary" data-bank-match>選択2件を照合</button>
+                <button class="btn" data-bank-unmatch>照合解除</button>
+              </div>
+            </div>
+            <div>
+              <label>差異理由</label>
+              <select data-bank-diff-reason>
+                <option value="未記帳（仕訳漏れ）">未記帳（仕訳漏れ）</option>
+                <option value="計上タイミング差">計上タイミング差</option>
+                <option value="金額誤り（仕訳修正要）">金額誤り（仕訳修正要）</option>
+              </select>
+              <label style="margin-top: 8px;">差異メモ</label>
+              <input data-bank-diff-note placeholder="例: 月末手数料が未起票" />
+              <div class="panel-actions" style="margin-top: 8px;">
+                <button class="btn warn" data-bank-mark-diff>差異として登録</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid two" style="margin-top: 14px;">
+        <article class="card">
+          <div class="body">
+            <h3>差異一覧と対応</h3>
             <table class="table">
-              <thead><tr><th>差異ID</th><th>内容</th><th>推奨仕訳</th><th>状態</th></tr></thead>
-              <tbody>
-                <tr><td>BK-001</td><td>振込手数料 330円</td><td>支払手数料 330 / 普通預金 330</td><td><span class="status ng">未起票</span></td></tr>
+              <thead><tr><th>通帳明細</th><th>理由</th><th>メモ</th><th>状態</th><th>操作</th></tr></thead>
+              <tbody data-bank-diff-body>
+                <tr><td colspan="5" class="muted">差異はありません。</td></tr>
               </tbody>
             </table>
-            <div class="note" style="margin-top: 10px;">この差異を起票すると銀行照合は完了（差異0件）になります。</div>
           </div>
         </article>
 
@@ -82,10 +137,8 @@
             <h3>照合ログ</h3>
             <table class="table">
               <thead><tr><th>日時</th><th>処理</th><th>結果</th></tr></thead>
-              <tbody>
-                <tr><td>2026-02-20 10:02</td><td>1回目自動突合</td><td><span class="status pending">差異1件</span></td></tr>
-                <tr><td>2026-02-20 10:04</td><td>請求Noで手動再突合</td><td><span class="status ok">5件一致</span></td></tr>
-                <tr><td>2026-02-20 10:05</td><td>差異原因特定</td><td><span class="status ok">仕訳漏れ判明</span></td></tr>
+              <tbody data-bank-log-body>
+                <tr><td colspan="3" class="muted">ログはまだありません。</td></tr>
               </tbody>
             </table>
           </div>
@@ -93,10 +146,7 @@
       </section>
     </main>
   </div>
-  <script src="assets/app.js?v=20260220d"></script>
+  <script src="assets/app.js?v=20260220e"></script>
 </body>
 </html>
-
-
-
 

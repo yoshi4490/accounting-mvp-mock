@@ -3,7 +3,8 @@
     entries: "accounting_mock_journal_entries_v1",
     grades: "accounting_mock_journal_grades_v1",
     docReviews: "accounting_mock_document_reviews_v1",
-    fixedAssets: "accounting_mock_fixed_assets_v1"
+    fixedAssets: "accounting_mock_fixed_assets_v1",
+    bankRecon: "accounting_mock_bank_reconcile_v1"
   };
 
   const DOC_MASTER = {
@@ -787,6 +788,581 @@
       const t = docBtns.find((b) => (b.dataset.docNo || "").toUpperCase() === req);
       if (t) activate(t);
     }
+  }
+
+  // bank reconcile page
+  const bankRoot = document.querySelector("[data-bank-root]");
+  if (bankRoot) {
+    const badgeMatch = bankRoot.querySelector("[data-bank-badge-match]");
+    const badgeOpen = bankRoot.querySelector("[data-bank-badge-open]");
+    const badgeDiff = bankRoot.querySelector("[data-bank-badge-diff]");
+    const messageEl = bankRoot.querySelector("[data-bank-message]");
+    const statementBody = bankRoot.querySelector("[data-bank-statement-body]");
+    const ledgerBody = bankRoot.querySelector("[data-bank-ledger-body]");
+    const diffBody = bankRoot.querySelector("[data-bank-diff-body]");
+    const logBody = bankRoot.querySelector("[data-bank-log-body]");
+    const selectedStatementEl = bankRoot.querySelector("[data-bank-selected-statement]");
+    const selectedLedgerEl = bankRoot.querySelector("[data-bank-selected-ledger]");
+
+    const autoMatchBtn = bankRoot.querySelector("[data-bank-auto-match]");
+    const reloadBtn = bankRoot.querySelector("[data-bank-reload]");
+    const matchBtn = bankRoot.querySelector("[data-bank-match]");
+    const unmatchBtn = bankRoot.querySelector("[data-bank-unmatch]");
+    const markDiffBtn = bankRoot.querySelector("[data-bank-mark-diff]");
+    const diffReason = bankRoot.querySelector("[data-bank-diff-reason]");
+    const diffNote = bankRoot.querySelector("[data-bank-diff-note]");
+
+    const statementRows = [
+      { id: "BK-20260115-01", date: "2026-01-15", description: "銀座ビル管理 家賃振込", amount: -180000 },
+      { id: "BK-20260120-01", date: "2026-01-20", description: "東京海上サンプル 保険料", amount: -36000 },
+      { id: "BK-20260129-01", date: "2026-01-29", description: "Studio K 送金", amount: -60000 },
+      { id: "BK-20260130-01", date: "2026-01-30", description: "青葉デザイン 入金", amount: 120000 },
+      { id: "BK-20260131-01", date: "2026-01-31", description: "振込手数料", amount: -440 },
+      { id: "BK-20260204-01", date: "2026-02-04", description: "北川商店 入金", amount: 88000 }
+    ];
+
+    const seedLedgerRows = [
+      { id: "S-001", date: "2026-01-15", memo: "1月分家賃支払", amount: -180000, counter: "地代家賃", docNo: "D-007", source: "seed" },
+      { id: "S-002", date: "2026-01-20", memo: "年間保険料支払", amount: -36000, counter: "前払費用", docNo: "D-012", source: "seed" },
+      { id: "S-003", date: "2026-01-29", memo: "買掛金支払 Studio K", amount: -60000, counter: "買掛金", docNo: "BILL-011", source: "seed" },
+      { id: "S-004", date: "2026-01-30", memo: "売掛金回収 青葉デザイン", amount: 120000, counter: "売掛金", docNo: "INV-001", source: "seed" },
+      { id: "S-005", date: "2026-02-04", memo: "売掛金回収 北川商店", amount: 88000, counter: "売掛金", docNo: "INV-002", source: "seed" }
+    ];
+
+    const esc = (s) =>
+      String(s || "").replace(/[&<>"']/g, (ch) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[ch] || ch));
+    const fmtSigned = (n) => `${n < 0 ? "-" : ""}${fmt(Math.abs(parseAmount(n)))}`;
+    const setMessage = (type, text) => setStatus(messageEl, type, text);
+    const parseYmd = (raw) => {
+      const d = new Date(String(raw || "") + "T00:00:00");
+      return Number.isNaN(d.getTime()) ? null : d;
+    };
+    const dayDiff = (a, b) => {
+      const da = parseYmd(a);
+      const db = parseYmd(b);
+      if (!da || !db) return 999;
+      return Math.abs(Math.floor((da.getTime() - db.getTime()) / 86400000));
+    };
+
+    let selectedStatementId = "";
+    let selectedLedgerId = "";
+    let ledgerRows = [];
+    let bankState = read(K.bankRecon);
+
+    const ensureBankState = () => {
+      if (!bankState || typeof bankState !== "object") bankState = {};
+      if (!bankState.matches || typeof bankState.matches !== "object") bankState.matches = {};
+      if (!bankState.diffs || typeof bankState.diffs !== "object") bankState.diffs = {};
+      if (!Array.isArray(bankState.logs)) bankState.logs = [];
+    };
+    ensureBankState();
+
+    const saveBankState = () => write(K.bankRecon, bankState);
+
+    const buildLedgerRows = () => {
+      const entriesMap = read(K.entries);
+      const rows = [];
+
+      Object.values(entriesMap).forEach((entry, eIndex) => {
+        if (!entry || !Array.isArray(entry.lines)) return;
+        entry.lines.forEach((line, lIndex) => {
+          const debit = parseAmount(line.debit);
+          const credit = parseAmount(line.credit);
+          let amount = 0;
+          let counter = "";
+          if (line.debitAccount === "普通預金" && debit > 0) {
+            amount = debit;
+            counter = line.creditAccount || "";
+          } else if (line.creditAccount === "普通預金" && credit > 0) {
+            amount = -credit;
+            counter = line.debitAccount || "";
+          } else {
+            return;
+          }
+
+          const baseDoc = String(entry.docNo || entry.documentNo || entry.slipNo || ("ENTRY" + String(eIndex)))
+            .replace(/[^A-Za-z0-9_-]/g, "");
+          rows.push({
+            id: `E-${baseDoc}-${lIndex}`,
+            date: String(entry.date || "").slice(0, 10),
+            memo: line.memo || entry.memo || "-",
+            amount,
+            counter,
+            docNo: entry.docNo || entry.documentNo || "-",
+            source: "entry"
+          });
+        });
+      });
+
+      const existingKeys = new Set(rows.map((r) => `${r.date}|${r.amount}`));
+      seedLedgerRows.forEach((seed) => {
+        const key = `${seed.date}|${seed.amount}`;
+        if (!existingKeys.has(key)) rows.push(seed);
+      });
+
+      return rows.sort((a, b) => {
+        if (a.date === b.date) return a.id.localeCompare(b.id);
+        return a.date.localeCompare(b.date);
+      });
+    };
+
+    const ledgerById = (id) => ledgerRows.find((row) => row.id === id);
+    const statementById = (id) => statementRows.find((row) => row.id === id);
+
+    const reverseMatchMap = () => {
+      const rev = {};
+      Object.keys(bankState.matches).forEach((sid) => {
+        const lid = bankState.matches[sid];
+        if (lid) rev[lid] = sid;
+      });
+      return rev;
+    };
+
+    const addLog = (action, type, result) => {
+      bankState.logs.unshift({
+        at: new Date().toISOString(),
+        action,
+        type,
+        result
+      });
+      bankState.logs = bankState.logs.slice(0, 30);
+      saveBankState();
+    };
+
+    const sanitizeBankState = () => {
+      const validStatementIds = new Set(statementRows.map((row) => row.id));
+      const validLedgerIds = new Set(ledgerRows.map((row) => row.id));
+      Object.keys(bankState.matches).forEach((sid) => {
+        const lid = bankState.matches[sid];
+        if (!validStatementIds.has(sid) || !validLedgerIds.has(lid)) {
+          delete bankState.matches[sid];
+        }
+      });
+      Object.keys(bankState.diffs).forEach((sid) => {
+        if (!validStatementIds.has(sid)) delete bankState.diffs[sid];
+      });
+      saveBankState();
+    };
+
+    const renderSelection = () => {
+      const st = statementById(selectedStatementId);
+      const ld = ledgerById(selectedLedgerId);
+      if (selectedStatementEl) {
+        selectedStatementEl.textContent = st
+          ? `${st.id} / ${st.date} / ${st.description} / ${fmtSigned(st.amount)}`
+          : "-";
+      }
+      if (selectedLedgerEl) {
+        selectedLedgerEl.textContent = ld
+          ? `${ld.id} / ${ld.date} / ${ld.memo} / ${fmtSigned(ld.amount)}`
+          : "-";
+      }
+    };
+
+    const renderSummary = () => {
+      const matchedCount = Object.keys(bankState.matches).length;
+      let openCount = 0;
+      let openAmount = 0;
+      statementRows.forEach((st) => {
+        if (bankState.matches[st.id]) return;
+        const diff = bankState.diffs[st.id];
+        const closed = Boolean(diff && (diff.status === "closed" || diff.status === "posted"));
+        if (!closed) {
+          openCount += 1;
+          openAmount += Math.abs(st.amount);
+        }
+      });
+
+      if (badgeMatch) badgeMatch.textContent = `一致 ${matchedCount} / ${statementRows.length}`;
+      if (badgeOpen) badgeOpen.textContent = `未解決 ${openCount}件`;
+      if (badgeDiff) badgeDiff.textContent = `未解決金額 ${fmt(openAmount)}円`;
+    };
+
+    const renderStatementTable = () => {
+      if (!statementBody) return;
+      const rows = statementRows.map((st) => {
+        const matchedLedgerId = bankState.matches[st.id];
+        const diff = bankState.diffs[st.id];
+        const isSelected = selectedStatementId === st.id;
+
+        let statusHtml = '<span class="status pending">未照合</span>';
+        if (matchedLedgerId) {
+          statusHtml = `<span class="status ok">一致 (${esc(matchedLedgerId)})</span>`;
+        } else if (diff && (diff.status === "closed" || diff.status === "posted")) {
+          statusHtml = '<span class="status ok">差異対応済み</span>';
+        } else if (diff) {
+          statusHtml = '<span class="status pending">差異登録済み</span>';
+        }
+
+        const rowClass = [
+          isSelected ? "bank-row-selected" : "",
+          matchedLedgerId ? "bank-row-matched" : "",
+          !matchedLedgerId && diff && diff.status !== "closed" && diff.status !== "posted" ? "bank-row-open" : ""
+        ].join(" ").trim();
+
+        return (
+          `<tr class="${rowClass}">` +
+          `<td><button class="btn" data-bank-select-statement="${st.id}">選択</button></td>` +
+          `<td>${esc(st.date)}</td>` +
+          `<td>${esc(st.description)}</td>` +
+          `<td class="num">${fmtSigned(st.amount)}</td>` +
+          `<td>${statusHtml}</td>` +
+          "</tr>"
+        );
+      });
+      statementBody.innerHTML = rows.join("");
+    };
+
+    const renderLedgerTable = () => {
+      if (!ledgerBody) return;
+      const rev = reverseMatchMap();
+      if (!ledgerRows.length) {
+        ledgerBody.innerHTML = '<tr><td colspan="5" class="muted">普通預金を含む仕訳がまだありません。</td></tr>';
+        return;
+      }
+      const rows = ledgerRows.map((ld) => {
+        const matchedStatementId = rev[ld.id];
+        const isSelected = selectedLedgerId === ld.id;
+        const rowClass = [
+          isSelected ? "bank-row-selected" : "",
+          matchedStatementId ? "bank-row-matched" : ""
+        ].join(" ").trim();
+        const statusHtml = matchedStatementId
+          ? `<span class="status ok">一致 (${esc(matchedStatementId)})</span>`
+          : '<span class="status pending">未照合</span>';
+        return (
+          `<tr class="${rowClass}">` +
+          `<td><button class="btn" data-bank-select-ledger="${ld.id}">選択</button></td>` +
+          `<td>${esc(ld.date || "-")}</td>` +
+          `<td>${esc(ld.memo || "-")}</td>` +
+          `<td class="num">${fmtSigned(ld.amount)}</td>` +
+          `<td>${statusHtml}</td>` +
+          "</tr>"
+        );
+      });
+      ledgerBody.innerHTML = rows.join("");
+    };
+
+    const renderDiffTable = () => {
+      if (!diffBody) return;
+      const unresolved = statementRows.filter((st) => !bankState.matches[st.id]);
+      if (!unresolved.length) {
+        diffBody.innerHTML = '<tr><td colspan="5" class="muted">差異はありません。</td></tr>';
+        return;
+      }
+
+      const rows = unresolved.map((st) => {
+        const diff = bankState.diffs[st.id];
+        const reason = diff ? diff.reason : "-";
+        const note = diff ? diff.note : "未登録";
+        const status = diff
+          ? (diff.status === "closed" || diff.status === "posted"
+            ? '<span class="status ok">対応済み</span>'
+            : '<span class="status pending">対応中</span>')
+          : '<span class="status ng">未対応</span>';
+
+        let actionHtml = `<button class="btn" data-bank-focus-statement="${st.id}">この行を選択</button>`;
+        if (
+          diff &&
+          diff.reason === "未記帳（仕訳漏れ）" &&
+          diff.status !== "posted" &&
+          /手数料/.test(st.description)
+        ) {
+          actionHtml =
+            `<button class="btn warn" data-bank-post-fee="${st.id}">手数料仕訳を起票</button>`;
+        } else if (diff && diff.postedDocNo) {
+          actionHtml = `<span class="status ok">起票済み ${esc(diff.postedDocNo)}</span>`;
+        }
+
+        return (
+          "<tr>" +
+          `<td>${esc(st.date)} ${esc(st.description)} (${fmtSigned(st.amount)})</td>` +
+          `<td>${esc(reason)}</td>` +
+          `<td>${esc(note)}</td>` +
+          `<td>${status}</td>` +
+          `<td>${actionHtml}</td>` +
+          "</tr>"
+        );
+      });
+      diffBody.innerHTML = rows.join("");
+    };
+
+    const renderLogTable = () => {
+      if (!logBody) return;
+      if (!bankState.logs.length) {
+        logBody.innerHTML = '<tr><td colspan="3" class="muted">ログはまだありません。</td></tr>';
+        return;
+      }
+      const rows = bankState.logs.map((log) => {
+        const status = log.type === "ok"
+          ? '<span class="status ok">成功</span>'
+          : log.type === "ng"
+            ? '<span class="status ng">失敗</span>'
+            : '<span class="status pending">記録</span>';
+        return (
+          "<tr>" +
+          `<td>${new Date(log.at).toLocaleString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}</td>` +
+          `<td>${esc(log.action)}</td>` +
+          `<td>${status} ${esc(log.result || "")}</td>` +
+          "</tr>"
+        );
+      });
+      logBody.innerHTML = rows.join("");
+    };
+
+    const renderAll = () => {
+      renderSummary();
+      renderSelection();
+      renderStatementTable();
+      renderLedgerTable();
+      renderDiffTable();
+      renderLogTable();
+    };
+
+    const applyMatch = (statementId, ledgerId, source) => {
+      const st = statementById(statementId);
+      const ld = ledgerById(ledgerId);
+      if (!st || !ld) {
+        setMessage("ng", "照合対象が見つかりません。");
+        return false;
+      }
+
+      const rev = reverseMatchMap();
+      if (rev[ledgerId] && rev[ledgerId] !== statementId) {
+        setMessage("ng", "選択した元帳行は別の通帳明細と照合済みです。");
+        return false;
+      }
+      if (parseAmount(st.amount) !== parseAmount(ld.amount)) {
+        setMessage("ng", "金額が一致しません。差異登録で原因を記録してください。");
+        return false;
+      }
+      if (dayDiff(st.date, ld.date) > 7) {
+        setMessage("ng", "日付差が大きすぎます。計上タイミング差として扱ってください。");
+        return false;
+      }
+
+      bankState.matches[statementId] = ledgerId;
+      delete bankState.diffs[statementId];
+      saveBankState();
+      addLog(`${source}照合`, "ok", `${statementId} ⇔ ${ledgerId}`);
+      setMessage("ok", `照合しました: ${statementId} ⇔ ${ledgerId}`);
+      renderAll();
+      return true;
+    };
+
+    const unmatchStatement = (statementId) => {
+      if (!statementId || !bankState.matches[statementId]) {
+        setMessage("pending", "照合解除する行を選択してください。");
+        return;
+      }
+      const ledgerId = bankState.matches[statementId];
+      delete bankState.matches[statementId];
+      saveBankState();
+      addLog("照合解除", "pending", `${statementId} ⇔ ${ledgerId}`);
+      setMessage("pending", `照合を解除しました: ${statementId}`);
+      renderAll();
+    };
+
+    const markDiff = () => {
+      const st = statementById(selectedStatementId);
+      if (!st) {
+        setMessage("pending", "先に通帳明細を1件選択してください。");
+        return;
+      }
+      const reason = diffReason instanceof HTMLSelectElement ? diffReason.value : "未記帳（仕訳漏れ）";
+      const note = diffNote instanceof HTMLInputElement ? diffNote.value.trim() : "";
+      if (bankState.matches[st.id]) delete bankState.matches[st.id];
+      bankState.diffs[st.id] = {
+        reason,
+        note,
+        status: reason === "計上タイミング差" ? "closed" : "open",
+        updatedAt: new Date().toISOString()
+      };
+      saveBankState();
+      addLog("差異登録", "pending", `${st.id} / ${reason}`);
+      setMessage("pending", `差異登録しました: ${st.id} / ${reason}`);
+      renderAll();
+    };
+
+    const postFeeEntry = (statementId) => {
+      const st = statementById(statementId);
+      if (!st) return;
+      const diff = bankState.diffs[statementId];
+      if (!diff || diff.reason !== "未記帳（仕訳漏れ）") {
+        setMessage("pending", "差異理由が未記帳の明細に対して実行してください。");
+        return;
+      }
+
+      const entriesMap = read(K.entries);
+      const amount = Math.abs(parseAmount(st.amount));
+      const docNo = diff.postedDocNo || `BKFEE-${st.date.replace(/-/g, "")}-${statementId.slice(-2)}`;
+      entriesMap[docNo] = {
+        docNo,
+        documentNo: statementId,
+        slipNo: `BK-${st.date.replace(/-/g, "")}-${statementId.slice(-2)}`,
+        date: st.date,
+        memo: `銀行手数料 ${statementId}`,
+        lines: [
+          {
+            debitAccount: "支払手数料",
+            creditAccount: "普通預金",
+            tax: "対象外",
+            partner: "みずほ銀行",
+            memo: "銀行照合で起票",
+            debit: amount,
+            credit: amount
+          }
+        ],
+        source: "bank-reconcile",
+        savedAt: new Date().toISOString()
+      };
+      write(K.entries, entriesMap);
+
+      diff.status = "posted";
+      diff.postedDocNo = docNo;
+      diff.updatedAt = new Date().toISOString();
+      saveBankState();
+
+      ledgerRows = buildLedgerRows();
+      sanitizeBankState();
+      const rev = reverseMatchMap();
+      const candidate = ledgerRows.find((row) =>
+        !rev[row.id] &&
+        parseAmount(row.amount) === parseAmount(st.amount) &&
+        row.date === st.date
+      );
+      if (candidate) {
+        bankState.matches[statementId] = candidate.id;
+        delete bankState.diffs[statementId];
+        saveBankState();
+      }
+
+      addLog("手数料仕訳起票", "ok", `${statementId} / ${docNo}`);
+      setMessage("ok", `手数料仕訳を起票しました（${docNo}）。`);
+      renderAll();
+    };
+
+    const runAutoMatch = () => {
+      let matched = 0;
+      const rev = reverseMatchMap();
+
+      statementRows.forEach((st) => {
+        if (bankState.matches[st.id]) return;
+        let best = null;
+        ledgerRows.forEach((ld) => {
+          if (rev[ld.id]) return;
+          if (parseAmount(ld.amount) !== parseAmount(st.amount)) return;
+          const diffDays = dayDiff(st.date, ld.date);
+          if (diffDays > 3) return;
+          if (!best || diffDays < best.diffDays) {
+            best = { ledgerId: ld.id, diffDays };
+          }
+        });
+        if (best) {
+          bankState.matches[st.id] = best.ledgerId;
+          delete bankState.diffs[st.id];
+          rev[best.ledgerId] = st.id;
+          matched += 1;
+        }
+      });
+
+      saveBankState();
+      addLog("自動突合", matched > 0 ? "ok" : "pending", `${matched}件一致`);
+      if (matched > 0) setMessage("ok", `自動突合で ${matched} 件を一致させました。`);
+      else setMessage("pending", "自動突合で一致する明細はありませんでした。");
+      renderAll();
+    };
+
+    if (statementBody) {
+      statementBody.addEventListener("click", (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) return;
+        const select = target.closest("[data-bank-select-statement]");
+        if (select instanceof HTMLElement) {
+          selectedStatementId = select.getAttribute("data-bank-select-statement") || "";
+          renderSelection();
+          renderStatementTable();
+          return;
+        }
+      });
+    }
+
+    if (ledgerBody) {
+      ledgerBody.addEventListener("click", (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) return;
+        const select = target.closest("[data-bank-select-ledger]");
+        if (select instanceof HTMLElement) {
+          selectedLedgerId = select.getAttribute("data-bank-select-ledger") || "";
+          renderSelection();
+          renderLedgerTable();
+          return;
+        }
+      });
+    }
+
+    if (diffBody) {
+      diffBody.addEventListener("click", (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) return;
+        const feeBtn = target.closest("[data-bank-post-fee]");
+        if (feeBtn instanceof HTMLElement) {
+          postFeeEntry(feeBtn.getAttribute("data-bank-post-fee") || "");
+          return;
+        }
+        const focusBtn = target.closest("[data-bank-focus-statement]");
+        if (focusBtn instanceof HTMLElement) {
+          selectedStatementId = focusBtn.getAttribute("data-bank-focus-statement") || "";
+          renderAll();
+        }
+      });
+    }
+
+    if (matchBtn instanceof HTMLButtonElement) {
+      matchBtn.addEventListener("click", () => {
+        if (!selectedStatementId || !selectedLedgerId) {
+          setMessage("pending", "通帳明細と元帳を1件ずつ選択してください。");
+          return;
+        }
+        applyMatch(selectedStatementId, selectedLedgerId, "手動");
+      });
+    }
+
+    if (unmatchBtn instanceof HTMLButtonElement) {
+      unmatchBtn.addEventListener("click", () => {
+        if (!selectedStatementId) {
+          setMessage("pending", "照合解除する通帳明細を選択してください。");
+          return;
+        }
+        unmatchStatement(selectedStatementId);
+      });
+    }
+
+    if (markDiffBtn instanceof HTMLButtonElement) {
+      markDiffBtn.addEventListener("click", markDiff);
+    }
+    if (autoMatchBtn instanceof HTMLButtonElement) {
+      autoMatchBtn.addEventListener("click", runAutoMatch);
+    }
+    if (reloadBtn instanceof HTMLButtonElement) {
+      reloadBtn.addEventListener("click", () => {
+        ledgerRows = buildLedgerRows();
+        sanitizeBankState();
+        setMessage("ok", "普通預金元帳を再読込しました。");
+        renderAll();
+      });
+    }
+
+    ledgerRows = buildLedgerRows();
+    sanitizeBankState();
+    setMessage("pending", "通帳明細と普通預金元帳を選択して照合してください。");
+    renderAll();
   }
 
   // fixed assets page
