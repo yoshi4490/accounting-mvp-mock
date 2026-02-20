@@ -8,11 +8,11 @@
 * { box-sizing: border-box; }
 body {
   margin: 0;
-  padding: 20px;
+  padding: 14px;
   background: var(--bg);
   color: var(--ink);
   font-family: "Yu Gothic UI", "Meiryo", sans-serif;
-  line-height: 1.45;
+  line-height: 1.35;
 }
 .paper {
   width: min(980px, 100%);
@@ -20,7 +20,7 @@ body {
   background: #fff;
   border: 1px solid var(--line);
   border-radius: 10px;
-  padding: 24px;
+  padding: 18px;
 }
 .head {
   display: grid;
@@ -30,9 +30,9 @@ body {
 }
 .head h1 {
   margin: 0;
-  font-size: 30px;
+  font-size: 24px;
   color: var(--head);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.04em;
 }
 .doc-no {
   margin-top: 6px;
@@ -51,7 +51,7 @@ body {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 4px 10px;
-  font-size: 13px;
+  font-size: 12px;
 }
 .meta dt { color: var(--muted); }
 .parties {
@@ -72,7 +72,7 @@ body {
 }
 .box p {
   margin: 2px 0;
-  font-size: 14px;
+  font-size: 13px;
 }
 .total {
   margin-top: 14px;
@@ -86,7 +86,7 @@ body {
 }
 .total strong { font-size: 14px; }
 .total .yen {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 800;
   color: #1e40af;
 }
@@ -94,7 +94,7 @@ body {
   width: 100%;
   border-collapse: collapse;
   margin-top: 14px;
-  font-size: 13px;
+  font-size: 12px;
 }
 .tbl th,
 .tbl td {
@@ -120,7 +120,7 @@ body {
 .summary table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: 12px;
 }
 .summary th,
 .summary td {
@@ -139,7 +139,7 @@ body {
   margin-top: 14px;
   border-top: 1px dashed var(--line);
   padding-top: 10px;
-  font-size: 13px;
+  font-size: 12px;
 }
 .badge {
   display: inline-flex;
@@ -159,7 +159,7 @@ body {
 }
 .bank-title h1 {
   margin: 0;
-  font-size: 24px;
+  font-size: 21px;
   letter-spacing: 0.04em;
 }
 .footer {
@@ -183,7 +183,7 @@ body {
   }
 
   .head h1 {
-    font-size: 26px;
+    font-size: 21px;
     letter-spacing: 0.04em;
   }
 
