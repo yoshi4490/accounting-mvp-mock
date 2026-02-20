@@ -1,10 +1,10 @@
-﻿<!doctype html>
+﻿﻿<!doctype html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>証憑確認 | 経理実務シミュレーション</title>
-  <link rel="stylesheet" href="assets/style.css" />
+  <link rel="stylesheet" href="assets/style.css?v=20260220d" />
 </head>
 <body>
   <div class="layout">
@@ -22,6 +22,7 @@
       <nav class="nav">
         <a href="scenario-documents.html" class="active">証憑確認</a>
         <a href="scenario-journals.html">仕訳入力</a>
+        <a href="scenario-fixed-assets.html">固定資産管理</a>
         <a href="scenario-ar.html">売掛消込</a>
         <a href="scenario-ap.html">買掛消込</a>
         <a href="scenario-bank.html">銀行照合</a>
@@ -31,12 +32,12 @@
       </nav>
     </aside>
 
-    <main class="main">
+    <main class="main" data-documents-root>
       <div class="topbar">
         <div>
           <span class="badge">証憑確認</span>
-          <span class="badge ghost">確認済み 18 / 24</span>
-          <span class="badge ghost">未確認 6件</span>
+          <span class="badge ghost" data-doc-complete>確認済み 0 / 9</span>
+          <span class="badge ghost">分類入力トレーニング</span>
         </div>
         <div class="panel-actions">
           <a class="btn" href="scenario.html">前提に戻る</a>
@@ -44,95 +45,43 @@
         </div>
       </div>
 
-      <section class="grid two">
-        <article class="card">
-          <div class="body">
-            <h2>証憑一覧（1-12 / 24）</h2>
-            <p class="muted">各証憑の内容を確認し、仕訳候補を判断してください。状態が「未確認」のものは優先して処理します。</p>
-            <table class="table">
-              <thead><tr><th>No</th><th>種類</th><th>発行日</th><th>取引先</th><th class="num">金額</th><th>仕訳候補</th><th>状態</th></tr></thead>
-              <tbody>
-                <tr><td>D-001</td><td>売上請求書</td><td>2026-01-05</td><td>青葉商事</td><td class="num">120,000</td><td>売掛金 / 売上高</td><td><span class="status ok">確認済</span></td></tr>
-                <tr><td>D-002</td><td>売上請求書</td><td>2026-01-09</td><td>北川工業</td><td class="num">88,000</td><td>売掛金 / 売上高</td><td><span class="status ok">確認済</span></td></tr>
-                <tr><td>D-003</td><td>売上請求書</td><td>2026-01-25</td><td>三光企画</td><td class="num">95,000</td><td>売掛金 / 売上高</td><td><span class="status pending">未確認</span></td></tr>
-                <tr><td>D-004</td><td>外注請求書</td><td>2026-01-15</td><td>Studio K</td><td class="num">60,000</td><td>外注費 / 買掛金</td><td><span class="status ok">確認済</span></td></tr>
-                <tr><td>D-005</td><td>外注請求書</td><td>2026-01-22</td><td>東都デザイン</td><td class="num">42,000</td><td>外注費 / 買掛金</td><td><span class="status pending">未確認</span></td></tr>
-                <tr><td>D-006</td><td>仕入請求書</td><td>2026-01-23</td><td>クラウド印刷</td><td class="num">35,000</td><td>仕入高 / 買掛金</td><td><span class="status ok">確認済</span></td></tr>
-                <tr><td>D-007</td><td>賃貸契約請求</td><td>2026-01-01</td><td>銀座不動産</td><td class="num">88,000</td><td>地代家賃 / 普通預金</td><td><span class="status ok">確認済</span></td></tr>
-                <tr><td>D-008</td><td>通信費請求書</td><td>2026-01-10</td><td>NTT東日本</td><td class="num">12,340</td><td>通信費 / 普通預金</td><td><span class="status ok">確認済</span></td></tr>
-                <tr><td>D-009</td><td>領収書</td><td>2026-01-12</td><td>JR東日本</td><td class="num">4,820</td><td>旅費交通費 / 現金</td><td><span class="status ok">確認済</span></td></tr>
-                <tr><td>D-010</td><td>領収書</td><td>2026-01-14</td><td>Amazon</td><td class="num">6,280</td><td>消耗品費 / 未払金</td><td><span class="status pending">未確認</span></td></tr>
-                <tr><td>D-011</td><td>購入請求書</td><td>2026-01-18</td><td>PC DEPOT</td><td class="num">96,000</td><td>工具器具備品 / 未払金</td><td><span class="status pending">未確認</span></td></tr>
-                <tr><td>D-012</td><td>保険料証券</td><td>2026-01-20</td><td>第一保険</td><td class="num">36,000</td><td>前払費用 / 普通預金</td><td><span class="status ok">確認済</span></td></tr>
-              </tbody>
-            </table>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="body">
-            <h3>証憑プレビュー: D-011（固定資産）</h3>
-            <div class="note" style="min-height: 320px; background: #fbfefd; border-color: #d3e3db;">
-              <p><strong>PC DEPOT 請求書</strong></p>
-              <p class="muted">請求日: 2026-01-18 / 支払期日: 2026-01-31</p>
-              <p class="muted">品目: ノートPC（開発用）1台</p>
-              <hr style="border:none;border-top:1px solid #e0ece6;" />
-              <p>本体価格: 87,273 円</p>
-              <p>消費税: 8,727 円（10%）</p>
-              <p class="kpi" style="font-size: 24px;">請求合計: 96,000 円</p>
-              <p class="muted">摘要例: 1月PC購入 / 固定資産計上</p>
-            </div>
-
-            <table class="table" style="margin-top: 10px;">
-              <thead><tr><th>確認ポイント</th><th>判断</th></tr></thead>
-              <tbody>
-                <tr><td>資産計上か費用計上か</td><td>固定資産（工具器具備品）</td></tr>
-                <tr><td>支払状況</td><td>月末支払予定（未払金）</td></tr>
-                <tr><td>税区分</td><td>課税仕入 10%</td></tr>
-                <tr><td>月末整理仕訳</td><td>減価償却 4,000円を別途計上</td></tr>
-              </tbody>
-            </table>
-
-            <div class="note" style="margin-top: 10px;">将来実装: PDF/画像はStorage配信。OCR結果から「勘定候補」「金額」「税区分」を自動提案。</div>
-          </div>
-        </article>
+      <section class="card">
+        <div class="body">
+          <h2>証憑一覧（分類入力）</h2>
+          <p class="muted">「証憑確認」から分類入力ページに進み、必須項目を保存すると状態が確認済みになります。</p>
+          <table class="table">
+            <thead><tr><th>No</th><th>種類</th><th>発行日</th><th>取引先</th><th class="num">金額</th><th>状態</th><th>仕訳</th><th>証憑確認</th></tr></thead>
+            <tbody>
+              <tr data-doc-no="D-001"><td>D-001</td><td>売上請求書</td><td>2026-01-05</td><td>青葉デザイン</td><td class="num">120,000</td><td><span class="status pending" data-doc-status>未確認</span></td><td><a class="btn doc-open" href="scenario-journals.html?doc=D-001">仕訳入力</a></td><td><a class="btn doc-open" href="scenario-document-verify.html?doc=D-001">証憑確認</a></td></tr>
+              <tr data-doc-no="D-002"><td>D-002</td><td>売上請求書</td><td>2026-01-09</td><td>北川商店</td><td class="num">88,000</td><td><span class="status pending" data-doc-status>未確認</span></td><td><a class="btn doc-open" href="scenario-journals.html?doc=D-002">仕訳入力</a></td><td><a class="btn doc-open" href="scenario-document-verify.html?doc=D-002">証憑確認</a></td></tr>
+              <tr data-doc-no="D-004"><td>D-004</td><td>外注請求書</td><td>2026-01-15</td><td>Studio K</td><td class="num">66,000</td><td><span class="status pending" data-doc-status>未確認</span></td><td><a class="btn doc-open" href="scenario-journals.html?doc=D-004">仕訳入力</a></td><td><a class="btn doc-open" href="scenario-document-verify.html?doc=D-004">証憑確認</a></td></tr>
+              <tr data-doc-no="D-005"><td>D-005</td><td>外注請求書</td><td>2026-01-22</td><td>TOTO制作</td><td class="num">44,000</td><td><span class="status pending" data-doc-status>未確認</span></td><td><a class="btn doc-open" href="scenario-journals.html?doc=D-005">仕訳入力</a></td><td><a class="btn doc-open" href="scenario-document-verify.html?doc=D-005">証憑確認</a></td></tr>
+              <tr data-doc-no="D-007"><td>D-007</td><td>賃貸借請求</td><td>2026-01-15</td><td>銀座ビル管理</td><td class="num">180,000</td><td><span class="status pending" data-doc-status>未確認</span></td><td><a class="btn doc-open" href="scenario-journals.html?doc=D-007">仕訳入力</a></td><td><a class="btn doc-open" href="scenario-document-verify.html?doc=D-007">証憑確認</a></td></tr>
+              <tr data-doc-no="D-009"><td>D-009</td><td>領収書</td><td>2026-01-12</td><td>JR東日本</td><td class="num">4,820</td><td><span class="status pending" data-doc-status>未確認</span></td><td><a class="btn doc-open" href="scenario-journals.html?doc=D-009">仕訳入力</a></td><td><a class="btn doc-open" href="scenario-document-verify.html?doc=D-009">証憑確認</a></td></tr>
+              <tr data-doc-no="D-011"><td>D-011</td><td>購入請求書</td><td>2026-01-18</td><td>PC DEPOT</td><td class="num">96,000</td><td><span class="status pending" data-doc-status>未確認</span></td><td><a class="btn doc-open" href="scenario-journals.html?doc=D-011">仕訳入力</a></td><td><a class="btn doc-open" href="scenario-document-verify.html?doc=D-011">証憑確認</a></td></tr>
+              <tr data-doc-no="D-012"><td>D-012</td><td>保険料証券</td><td>2026-01-20</td><td>東京海上サンプル</td><td class="num">36,000</td><td><span class="status pending" data-doc-status>未確認</span></td><td><a class="btn doc-open" href="scenario-journals.html?doc=D-012">仕訳入力</a></td><td><a class="btn doc-open" href="scenario-document-verify.html?doc=D-012">証憑確認</a></td></tr>
+              <tr data-doc-no="BK-001"><td>BK-001</td><td>通帳明細</td><td>2026-01-31</td><td>みずほ銀行</td><td class="num">440</td><td><span class="status pending" data-doc-status>未確認</span></td><td><a class="btn doc-open" href="scenario-journals.html?doc=BK-001">仕訳入力</a></td><td><a class="btn doc-open" href="scenario-document-verify.html?doc=BK-001">証憑確認</a></td></tr>
+            </tbody>
+          </table>
+        </div>
       </section>
 
-      <section class="grid two" style="margin-top: 14px;">
-        <article class="card">
-          <div class="body">
-            <h3>未確認証憑（優先処理）</h3>
-            <table class="table">
-              <thead><tr><th>No</th><th>理由</th><th>対応</th><th>遷移</th></tr></thead>
-              <tbody>
-                <tr><td>D-003</td><td>売上計上日と請求日の確認が未了</td><td>計上日を確定</td><td><a class="btn" href="scenario-journals.html">仕訳へ</a></td></tr>
-                <tr><td>D-005</td><td>外注費か仕入高かの判定待ち</td><td>契約書照合</td><td><a class="btn" href="scenario-journals.html">仕訳へ</a></td></tr>
-                <tr><td>D-010</td><td>支払方法（現金/未払）の判定待ち</td><td>通帳明細確認</td><td><a class="btn" href="scenario-bank.html">照合へ</a></td></tr>
-                <tr><td>D-011</td><td>固定資産台帳への登録待ち</td><td>資産区分を確定</td><td><a class="btn" href="scenario-journals.html">仕訳へ</a></td></tr>
-              </tbody>
-            </table>
+      <section class="card" style="margin-top: 14px;">
+        <div class="body">
+          <h3>使い方</h3>
+          <div class="note">
+            1) 「証憑確認」を押して分類項目を入力する
+            2) 必須項目が埋まった状態で保存する
+            3) 一覧の状態が「確認済み」になったら仕訳入力へ進む
           </div>
-        </article>
-
-        <article class="card">
-          <div class="body">
-            <h3>証憑チェック進捗</h3>
-            <table class="table">
-              <thead><tr><th>区分</th><th>確認済</th><th>総数</th><th>進捗</th></tr></thead>
-              <tbody>
-                <tr><td>売上関連</td><td>2件</td><td>3件</td><td>67%</td></tr>
-                <tr><td>仕入/外注</td><td>2件</td><td>3件</td><td>67%</td></tr>
-                <tr><td>経費関連</td><td>10件</td><td>12件</td><td>83%</td></tr>
-                <tr><td>資産/整理</td><td>4件</td><td>6件</td><td>67%</td></tr>
-                <tr><td><strong>合計</strong></td><td><strong>18件</strong></td><td><strong>24件</strong></td><td><strong>75%</strong></td></tr>
-              </tbody>
-            </table>
-            <div class="note" style="margin-top: 10px;">次の推奨: 未確認証憑4件を先に確定してから、仕訳入力で一気に登録。</div>
-          </div>
-        </article>
+        </div>
       </section>
     </main>
   </div>
-  <script src="assets/app.js"></script>
+  <script src="assets/app.js?v=20260220d"></script>
 </body>
 </html>
+
+
+
+

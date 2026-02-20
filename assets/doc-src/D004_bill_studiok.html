@@ -1,0 +1,52 @@
+﻿﻿<!doctype html>
+<html lang='ja'>
+<head>
+<meta charset='utf-8'>
+<title>外注請求書 BILL-011</title>
+<style>
+  @page { size: A4; margin: 14mm; }
+  body { font-family: 'Yu Gothic', 'Meiryo', sans-serif; color: #1b2a25; }
+  .sheet { border: 1px solid #b8cbc2; border-radius: 10px; padding: 18px; }
+  .head { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 14px; }
+  h1 { font-size: 24px; margin:0 0 8px; }
+  .badge { font-size: 11px; border:1px solid #aac5b8; padding:3px 8px; border-radius:999px; color:#205340; }
+  .box { border:1px solid #cfddd6; border-radius:8px; padding:10px; margin:8px 0; }
+  .label { color:#4e625b; font-size:12px; }
+  .amount { font-size:32px; font-weight:700; color:#0f6f50; }
+  .tbl { width:100%; border-collapse:collapse; margin-top:10px; }
+  .tbl th,.tbl td { border:1px solid #d7e3dd; padding:8px; font-size:12px; }
+  .tbl th { background:#eff6f2; text-align:left; }
+</style>
+</head>
+<body>
+  <div class='sheet'>
+    <div class='head'>
+      <div>
+        <h1>外注請求書 BILL-011</h1>
+        <span class='badge'>ダミー証憑 / 学習用</span>
+      </div>
+      <div style='text-align:right;'>
+        <div class='label'>発行日</div><div>2026-01-15</div>
+        <div class='label' style='margin-top:6px;'>支払期日</div><div>2026-01-31</div>
+      </div>
+    </div>
+
+    <div class='box'><div class='label'>発行元</div><div><strong>Studio K</strong></div></div>
+    <div class='box'><div class='label'>宛先</div><div><strong>株式会社サンプルワークス</strong></div></div>
+
+    <div class='box'>
+      <div class='label'>件名 / 内容</div>
+      <div>デザイン業務委託費</div>
+      <div class='label' style='margin-top:8px;'>備考</div>
+      <div>源泉対象外</div>
+    </div>
+
+    <div class='box'>
+      <div class='label'>請求金額</div>
+      <div class='amount'>60,000 円</div>
+    </div>
+
+    
+  </div>
+</body>
+</html>

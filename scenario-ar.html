@@ -1,10 +1,10 @@
-﻿<!doctype html>
+﻿﻿<!doctype html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>売掛消込 | 経理実務シミュレーション</title>
-  <link rel="stylesheet" href="assets/style.css" />
+  <link rel="stylesheet" href="assets/style.css?v=20260220d" />
 </head>
 <body>
   <div class="layout">
@@ -22,6 +22,7 @@
       <nav class="nav">
         <a href="scenario-documents.html">証憑確認</a>
         <a href="scenario-journals.html">仕訳入力</a>
+        <a href="scenario-fixed-assets.html">固定資産管理</a>
         <a href="scenario-ar.html" class="active">売掛消込</a>
         <a href="scenario-ap.html">買掛消込</a>
         <a href="scenario-bank.html">銀行照合</a>
@@ -36,57 +37,128 @@
         <div>
           <span class="badge">売掛消込</span>
           <span class="badge ghost">完了 2 / 3</span>
-          <span class="badge ghost">未消込 1件（88,000円）</span>
+          <span class="badge ghost">残タスク: INV-002（88,000円）</span>
         </div>
-        <button class="btn primary">選択行を消込</button>
+        <div class="panel-actions">
+          <button class="btn">下書き保存</button>
+          <button class="btn primary">消込を確定</button>
+        </div>
       </div>
 
-      <section class="grid two">
+      <section class="card tinted">
+        <div class="body">
+          <h2>この画面でやること</h2>
+          <p class="muted">請求書と入金を突合して、月末時点での売掛残高を確定します。今回のゴールは「INV-002を次月入金予定として正しく繰越記録する」です。</p>
+          <div class="flow-steps" style="margin-top: 10px;">
+            <div class="step"><strong>1. 請求を選ぶ</strong><span class="muted">未消込の請求Noを選択</span></div>
+            <div class="step"><strong>2. 入金明細を選ぶ</strong><span class="muted">名義・金額・日付で候補確認</span></div>
+            <div class="step"><strong>3. 差額判定</strong><span class="muted">一致/不足/超過を判定</span></div>
+            <div class="step"><strong>4. 結果記録</strong><span class="muted">消込 or 次月繰越理由を登録</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid two" style="margin-top: 14px;">
         <article class="card">
           <div class="body">
-            <h2>売掛一覧</h2>
+            <h3>Step 1: 売掛（請求）を選択</h3>
             <table class="table">
-              <thead><tr><th></th><th>請求No</th><th>取引先</th><th>請求日</th><th>期日</th><th class="num">残高</th><th>状態</th></tr></thead>
+              <thead><tr><th>選択</th><th>請求No</th><th>取引先</th><th>請求日</th><th>期日</th><th class="num">残高</th><th>状態</th></tr></thead>
               <tbody>
-                <tr><td><input type="checkbox" checked /></td><td>INV-001</td><td>青葉商事</td><td>2026-01-05</td><td>2026-01-31</td><td class="num">120,000</td><td><span class="status ok">消込済</span></td></tr>
-                <tr><td><input type="checkbox" checked /></td><td>INV-002</td><td>北川工業</td><td>2026-01-09</td><td>2026-02-05</td><td class="num">88,000</td><td><span class="status pending">未消込</span></td></tr>
-                <tr><td><input type="checkbox" checked /></td><td>INV-003</td><td>三光企画</td><td>2026-01-25</td><td>2026-02-28</td><td class="num">95,000</td><td><span class="status ok">消込済</span></td></tr>
+                <tr><td><input type="radio" name="ar_pick" /></td><td>INV-001</td><td>青葉商事</td><td>2026-01-05</td><td>2026-01-31</td><td class="num">120,000</td><td><span class="status ok">消込済</span></td></tr>
+                <tr><td><input type="radio" name="ar_pick" checked /></td><td><strong>INV-002</strong></td><td>北川工業</td><td>2026-01-09</td><td>2026-02-05</td><td class="num"><strong>88,000</strong></td><td><span class="status pending">未消込</span></td></tr>
+                <tr><td><input type="radio" name="ar_pick" /></td><td>INV-003</td><td>三光企画</td><td>2026-01-25</td><td>2026-02-28</td><td class="num">95,000</td><td><span class="status ok">消込済</span></td></tr>
               </tbody>
             </table>
+            <div class="note" style="margin-top: 8px;">実務ポイント: 先に「消込対象の請求No」を固定してから、入金明細を探すと誤消込を防げます。</div>
           </div>
         </article>
 
         <article class="card">
           <div class="body">
-            <h2>入金明細</h2>
+            <h3>Step 2: 入金明細を選択</h3>
             <table class="table">
-              <thead><tr><th></th><th>入金日</th><th>名義</th><th class="num">入金額</th><th>候補請求</th></tr></thead>
+              <thead><tr><th>選択</th><th>入金日</th><th>名義</th><th class="num">入金額</th><th>候補請求</th><th>判定</th></tr></thead>
               <tbody>
-                <tr><td><input type="checkbox" checked /></td><td>2026-01-30</td><td>青葉商事(ｶ</td><td class="num">120,000</td><td>INV-001</td></tr>
-                <tr><td><input type="checkbox" /></td><td>2026-02-04</td><td>ｷﾀｶﾞﾜｺｳｷﾞｮｳ</td><td class="num">88,000</td><td>INV-002</td></tr>
-                <tr><td><input type="checkbox" checked /></td><td>2026-02-27</td><td>三光企画(ｶ</td><td class="num">95,000</td><td>INV-003</td></tr>
+                <tr><td><input type="radio" name="bank_pick" /></td><td>2026-01-30</td><td>青葉商事(ｶ</td><td class="num">120,000</td><td>INV-001</td><td><span class="status ok">一致済</span></td></tr>
+                <tr><td><input type="radio" name="bank_pick" checked /></td><td><strong>2026-02-04</strong></td><td>ｷﾀｶﾞﾜｺｳｷﾞｮｳ</td><td class="num"><strong>88,000</strong></td><td>INV-002</td><td><span class="status pending">候補</span></td></tr>
+                <tr><td><input type="radio" name="bank_pick" /></td><td>2026-02-27</td><td>三光企画(ｶ</td><td class="num">95,000</td><td>INV-003</td><td><span class="status ok">一致済</span></td></tr>
               </tbody>
             </table>
-            <div class="note" style="margin-top: 10px;">INV-002 は期日後入金（2/4）想定。月末締め時点では未消込理由を記録して次月へ繰越。</div>
+            <div class="note" style="margin-top: 8px;">実務ポイント: 名義はゆれや省略があるため、請求Noと金額・日付の組み合わせで確認します。</div>
+          </div>
+        </article>
+      </section>
+
+      <section class="grid two" style="margin-top: 14px;">
+        <article class="card">
+          <div class="body">
+            <h3>Step 3: 突合結果プレビュー</h3>
+            <table class="table">
+              <tbody>
+                <tr><th>選択請求</th><td>INV-002（北川工業）</td></tr>
+                <tr><th>請求残高</th><td class="num">88,000 円</td></tr>
+                <tr><th>選択入金</th><td>2026-02-04 入金</td></tr>
+                <tr><th>入金額</th><td class="num">88,000 円</td></tr>
+                <tr><th>差額</th><td class="num">0 円</td></tr>
+                <tr><th>月末時点判定</th><td><span class="status pending">1月末未消込（翌月入金）</span></td></tr>
+              </tbody>
+            </table>
+            <div class="note" style="margin-top: 8px;">金額は一致していますが、入金日が2月のため「1月締め」では未消込扱いです。</div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="body">
+            <h3>Step 4: 処理結果を記録</h3>
+            <div class="form-row" style="grid-template-columns: 1fr 1fr;">
+              <div>
+                <label>処理区分</label>
+                <select>
+                  <option>次月繰越（入金予定あり）</option>
+                  <option>消込完了</option>
+                  <option>一部消込</option>
+                  <option>保留（確認待ち）</option>
+                </select>
+              </div>
+              <div>
+                <label>理由コード</label>
+                <select>
+                  <option>RC-02: 期日内だが翌月入金</option>
+                  <option>RC-01: 入金予定未達</option>
+                  <option>RC-03: 金額差異あり</option>
+                </select>
+              </div>
+            </div>
+            <label>コメント</label>
+            <textarea rows="4">INV-002 は 2026-02-04 入金確認。1月締め時点では未消込のため、翌月消込予定として繰越。</textarea>
+            <div class="panel-actions" style="margin-top: 10px;">
+              <button class="btn primary">この内容で記録</button>
+              <a class="btn" href="scenario-close.html">締めチェックへ戻る</a>
+            </div>
           </div>
         </article>
       </section>
 
       <section class="card" style="margin-top: 14px;">
         <div class="body">
-          <h3>消込ログ</h3>
+          <h3>消込ログ（監査証跡）</h3>
           <table class="table">
-            <thead><tr><th>日時</th><th>請求No</th><th>処理</th><th>結果</th></tr></thead>
+            <thead><tr><th>日時</th><th>請求No</th><th>処理</th><th>結果</th><th>担当メモ</th></tr></thead>
             <tbody>
-              <tr><td>2026-02-20 09:12</td><td>INV-001</td><td>入金 120,000 突合</td><td><span class="status ok">成功</span></td></tr>
-              <tr><td>2026-02-20 09:18</td><td>INV-003</td><td>入金 95,000 突合</td><td><span class="status ok">成功</span></td></tr>
-              <tr><td>2026-02-20 09:21</td><td>INV-002</td><td>締め時点判定</td><td><span class="status pending">次月繰越</span></td></tr>
+              <tr><td>2026-02-20 09:12</td><td>INV-001</td><td>入金 120,000 突合</td><td><span class="status ok">消込完了</span></td><td>期日内入金</td></tr>
+              <tr><td>2026-02-20 09:18</td><td>INV-003</td><td>入金 95,000 突合</td><td><span class="status ok">消込完了</span></td><td>名義一致</td></tr>
+              <tr><td>2026-02-20 09:21</td><td>INV-002</td><td>月末判定</td><td><span class="status pending">次月繰越</span></td><td>RC-02 登録</td></tr>
             </tbody>
           </table>
         </div>
       </section>
     </main>
   </div>
-  <script src="assets/app.js"></script>
+  <script src="assets/app.js?v=20260220d"></script>
 </body>
 </html>
+
+
+
+

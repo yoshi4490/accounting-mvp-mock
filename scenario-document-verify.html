@@ -1,0 +1,172 @@
+﻿<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>証憑確認入力 | 経理実務シミュレーション</title>
+  <link rel="stylesheet" href="assets/style.css?v=20260220d" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="brand" href="dashboard.html" aria-label="ダッシュボードへ戻る">
+        <span class="brand-mark"><img src="assets/logo.svg" alt="" /></span>
+        <span class="brand-text">経理実務Sim<small>Scenario 001 / 2026-01</small></span>
+      </a>
+      <div class="nav-label">メイン</div>
+      <nav class="nav">
+        <a href="dashboard.html">ダッシュボード</a>
+        <a href="scenario.html">シナリオ概要</a>
+      </nav>
+      <div class="nav-label">作業フロー</div>
+      <nav class="nav">
+        <a href="scenario-documents.html" class="active">証憑確認</a>
+        <a href="scenario-journals.html">仕訳入力</a>
+        <a href="scenario-fixed-assets.html">固定資産管理</a>
+        <a href="scenario-ar.html">売掛消込</a>
+        <a href="scenario-ap.html">買掛消込</a>
+        <a href="scenario-bank.html">銀行照合</a>
+        <a href="scenario-close.html">月次締め</a>
+        <a href="scenario-reports.html">試算表/PL/BS</a>
+        <a href="scenario-review.html">採点結果</a>
+      </nav>
+    </aside>
+
+    <main class="main" data-doc-verify-root>
+      <div class="topbar">
+        <div>
+          <span class="badge">証憑確認入力</span>
+          <span class="badge ghost" data-verify-doc-label>対象: -</span>
+          <span class="badge ghost" data-verify-complete-label>状態: 未保存</span>
+        </div>
+        <div class="panel-actions">
+          <a class="btn" href="scenario-documents.html">一覧へ戻る</a>
+          <button class="btn primary" data-verify-save>保存する</button>
+        </div>
+      </div>
+
+      <section class="card">
+        <div class="body">
+          <h2 data-verify-title>証憑情報の確認と分類</h2>
+          <p class="muted" data-verify-subtitle>必須項目を入力して保存すると、この証憑は確認済みになります。</p>
+
+          <div class="verify-layout">
+            <article class="verify-form">
+              <div class="verify-grid">
+                <div>
+                  <label>証憑種別 *</label>
+                  <select data-verify-field="docKind">
+                    <option value="">選択してください</option>
+                    <option value="請求書">請求書</option>
+                    <option value="領収書">領収書</option>
+                    <option value="通帳明細">通帳明細</option>
+                    <option value="保険証券">保険証券</option>
+                  </select>
+                </div>
+                <div>
+                  <label>取引区分 *</label>
+                  <select data-verify-field="tradeType">
+                    <option value="">選択してください</option>
+                    <option value="電子取引">電子取引</option>
+                    <option value="紙証憑">紙証憑</option>
+                  </select>
+                </div>
+                <div>
+                  <label>証憑番号 *</label>
+                  <input data-verify-field="docNumber" />
+                </div>
+                <div>
+                  <label>発行日 *</label>
+                  <input type="date" data-verify-field="issueDate" />
+                </div>
+                <div>
+                  <label>取引期間(開始)</label>
+                  <input type="date" data-verify-field="periodFrom" />
+                </div>
+                <div>
+                  <label>取引期間(終了)</label>
+                  <input type="date" data-verify-field="periodTo" />
+                </div>
+                <div>
+                  <label>取引先名 *</label>
+                  <input data-verify-field="partnerName" />
+                </div>
+                <div>
+                  <label>登録番号</label>
+                  <input data-verify-field="registrationNo" placeholder="T0000000000000" />
+                </div>
+                <div>
+                  <label>請求区分</label>
+                  <select data-verify-field="invoiceClass">
+                    <option value="適格">適格</option>
+                    <option value="区分記載">区分記載</option>
+                    <option value="対象外">対象外</option>
+                  </select>
+                </div>
+                <div>
+                  <label>決済方法</label>
+                  <select data-verify-field="paymentMethod">
+                    <option value="振込">振込</option>
+                    <option value="現金">現金</option>
+                    <option value="クレジットカード">クレジットカード</option>
+                  </select>
+                </div>
+                <div>
+                  <label>経理方式 *</label>
+                  <select data-verify-field="accountingMethod">
+                    <option value="">選択してください</option>
+                    <option value="税抜">税抜</option>
+                    <option value="税込">税込</option>
+                  </select>
+                </div>
+                <div>
+                  <label>消費税率 *</label>
+                  <select data-verify-field="taxRate">
+                    <option value="">選択してください</option>
+                    <option value="10%">10%</option>
+                    <option value="8%">8%</option>
+                    <option value="対象外">対象外</option>
+                  </select>
+                </div>
+                <div>
+                  <label>税込金額 *</label>
+                  <input inputmode="numeric" data-verify-field="grossAmount" />
+                </div>
+                <div>
+                  <label>税抜金額 *</label>
+                  <input inputmode="numeric" data-verify-field="netAmount" />
+                </div>
+                <div>
+                  <label>消費税額 *</label>
+                  <input inputmode="numeric" data-verify-field="taxAmount" />
+                </div>
+                <div>
+                  <label>メモ</label>
+                  <input data-verify-field="memo" />
+                </div>
+              </div>
+            </article>
+
+            <article class="verify-preview">
+              <div class="verify-preview-head">
+                <strong>証憑プレビュー</strong>
+                <a class="btn doc-open" data-verify-open-pdf href="#" target="_blank" rel="noopener noreferrer">別タブで開く</a>
+              </div>
+              <iframe class="verify-frame" data-verify-frame title="証憑プレビュー"></iframe>
+            </article>
+          </div>
+
+          <div class="verify-footer">
+            <span class="status pending" data-verify-message>必須項目を入力して保存してください。</span>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="assets/app.js?v=20260220d"></script>
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,130 @@
+﻿<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>固定資産管理 | 経理実務シミュレーション</title>
+  <link rel="stylesheet" href="assets/style.css?v=20260220d" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="brand" href="dashboard.html" aria-label="ダッシュボードへ戻る">
+        <span class="brand-mark"><img src="assets/logo.svg" alt="" /></span>
+        <span class="brand-text">経理実務Sim<small>Scenario 001 / 2026-01</small></span>
+      </a>
+      <div class="nav-label">メイン</div>
+      <nav class="nav">
+        <a href="dashboard.html">ダッシュボード</a>
+        <a href="scenario.html">シナリオ概要</a>
+      </nav>
+      <div class="nav-label">作業フロー</div>
+      <nav class="nav">
+        <a href="scenario-documents.html">証憑確認</a>
+        <a href="scenario-journals.html">仕訳入力</a>
+        <a href="scenario-fixed-assets.html" class="active">固定資産管理</a>
+        <a href="scenario-ar.html">売掛消込</a>
+        <a href="scenario-ap.html">買掛消込</a>
+        <a href="scenario-bank.html">銀行照合</a>
+        <a href="scenario-close.html">月次締め</a>
+        <a href="scenario-reports.html">試算表/PL/BS</a>
+        <a href="scenario-review.html">採点結果</a>
+      </nav>
+    </aside>
+
+    <main class="main" data-fixed-assets-root>
+      <div class="topbar">
+        <div>
+          <span class="badge">固定資産管理</span>
+          <span class="badge ghost" data-fa-count>台帳登録 0 件</span>
+          <span class="badge ghost" data-fa-dep-status>償却仕訳 未反映</span>
+        </div>
+        <div class="panel-actions">
+          <a class="btn" href="scenario-journals.html">仕訳入力へ戻る</a>
+          <a class="btn primary" href="scenario-reports.html">PL/BSを確認</a>
+        </div>
+      </div>
+
+      <section class="grid two">
+        <article class="card">
+          <div class="body">
+            <h2>資産候補（仕訳から抽出）</h2>
+            <p class="muted">借方が「工具器具備品」の仕訳を候補表示します。台帳登録して償却対象にします。</p>
+            <table class="table">
+              <thead><tr><th>証憑No</th><th>日付</th><th>摘要</th><th class="num">取得価額</th><th>状態</th><th>操作</th></tr></thead>
+              <tbody data-fa-candidate-body>
+                <tr><td colspan="6" class="muted">仕訳データの読込中...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="body">
+            <h2>月次償却</h2>
+            <div class="form-row" style="grid-template-columns: 1fr 1fr;">
+              <div>
+                <label>対象月</label>
+                <input type="month" data-fa-target-month value="2026-01" />
+              </div>
+              <div>
+                <label>対象資産</label>
+                <select data-fa-target-asset>
+                  <option value="">選択してください</option>
+                </select>
+              </div>
+            </div>
+            <table class="table">
+              <tbody>
+                <tr><td>取得価額</td><td class="num" data-fa-detail-cost>0</td></tr>
+                <tr><td>耐用月数</td><td class="num" data-fa-detail-life>0</td></tr>
+                <tr><td>月次償却額</td><td class="num" data-fa-detail-monthly>0</td></tr>
+                <tr><td>今月償却予定額</td><td class="num" data-fa-detail-target>0</td></tr>
+              </tbody>
+            </table>
+            <div class="panel-actions" style="margin-top: 10px;">
+              <button class="btn primary" data-fa-post-dep>償却仕訳を反映</button>
+            </div>
+            <div class="note" style="margin-top: 10px;" data-fa-message>対象資産を選択すると償却計算が表示されます。</div>
+          </div>
+        </article>
+      </section>
+
+      <section class="card" style="margin-top: 14px;">
+        <div class="body">
+          <h2>固定資産台帳</h2>
+          <table class="table">
+            <thead><tr><th>資産ID</th><th>資産名</th><th>取得日</th><th class="num">取得価額</th><th class="num">残存価額</th><th class="num">耐用月数</th><th class="num">月次償却</th><th>操作</th></tr></thead>
+            <tbody data-fa-register-body>
+              <tr><td colspan="8" class="muted">台帳データがありません。</td></tr>
+            </tbody>
+          </table>
+
+          <div class="fa-edit" style="margin-top: 12px;">
+            <h3>資産情報編集</h3>
+            <div class="form-row" style="grid-template-columns: repeat(4, minmax(0, 1fr));">
+              <div><label>資産ID</label><input data-fa-field="assetId" readonly /></div>
+              <div><label>資産名</label><input data-fa-field="name" /></div>
+              <div><label>取得日</label><input type="date" data-fa-field="acquisitionDate" /></div>
+              <div><label>取得価額</label><input inputmode="numeric" data-fa-field="cost" /></div>
+              <div><label>残存価額</label><input inputmode="numeric" data-fa-field="residual" /></div>
+              <div><label>耐用月数</label><input inputmode="numeric" data-fa-field="lifeMonths" /></div>
+              <div><label>償却開始月</label><input type="month" data-fa-field="startMonth" /></div>
+              <div><label>償却方法</label><select data-fa-field="method"><option value="定額法">定額法</option></select></div>
+            </div>
+            <div class="panel-actions">
+              <button class="btn" data-fa-reset-edit>クリア</button>
+              <button class="btn primary" data-fa-save-edit>台帳更新</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="assets/app.js?v=20260220d"></script>
+</body>
+</html>
+
+
+
+

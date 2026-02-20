@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>仕訳入力 | 経理実務シミュレーション</title>
-  <link rel="stylesheet" href="assets/style.css" />
+  <link rel="stylesheet" href="assets/style.css?v=20260220d" />
 </head>
 <body>
   <div class="layout">
@@ -22,6 +22,7 @@
       <nav class="nav">
         <a href="scenario-documents.html">証憑確認</a>
         <a href="scenario-journals.html" class="active">仕訳入力</a>
+        <a href="scenario-fixed-assets.html">固定資産管理</a>
         <a href="scenario-ar.html">売掛消込</a>
         <a href="scenario-ap.html">買掛消込</a>
         <a href="scenario-bank.html">銀行照合</a>
@@ -31,97 +32,200 @@
       </nav>
     </aside>
 
-    <main class="main">
+    <main class="main" data-journal-practice>
       <div class="topbar">
         <div>
-          <span class="badge">仕訳入力</span>
-          <span class="badge ghost">入力済み 15 / 20</span>
-          <span class="badge ghost">要修正 3件</span>
-        </div>
-        <div class="panel-actions">
-          <button class="btn">下書き保存</button>
-          <button class="btn primary">仕訳を保存</button>
+          <span class="badge">学習モード</span>
+          <span class="badge ghost" data-doc-progress>証憑を選択してください</span>
         </div>
       </div>
 
       <section class="card">
         <div class="body">
-          <h2>仕訳入力（複合仕訳）</h2>
-          <p class="muted">証憑 D-011（ノートPC購入）を処理中。固定資産計上 + 未払計上の仕訳を作成します。</p>
-
-          <div class="form-row">
-            <div><label>伝票日付</label><input type="date" value="2026-01-18" /></div>
-            <div><label>摘要</label><input type="text" value="ノートPC購入（固定資産計上）" /></div>
-            <div><label>証憑No</label><input type="text" value="D-011" /></div>
-            <div><label>ステータス</label><input type="text" value="下書き" /></div>
+          <h2>証憑を選択</h2>
+          <p class="muted" style="margin-bottom: 12px;">まずは1件選択してください。選択後にこの画面で仕訳入力まで完了できます。</p>
+          <div class="doc-button-grid">
+            <button class="doc-mini-btn" data-doc-button data-slip-no="JV-2026-0105-01" data-doc-no="D-001" data-date="2026-01-05" data-memo="売上請求 INV-001" data-debit="売掛金" data-credit="売上高" data-amount="120000" data-tax="対象外" data-partner="青葉デザイン" data-kind="請求書" data-title="売上請求（青葉）" data-priority="売掛金計上" data-pdf="assets/docs/D001_invoice_aoba.pdf">D-001</button>
+            <button class="doc-mini-btn" data-doc-button data-slip-no="JV-2026-0106-02" data-doc-no="D-002" data-date="2026-01-06" data-memo="売上請求 INV-002" data-debit="売掛金" data-credit="売上高" data-amount="88000" data-tax="対象外" data-partner="北川商店" data-kind="請求書" data-title="売上請求（北川）" data-priority="売掛金計上" data-pdf="assets/docs/D002_invoice_kitagawa.pdf">D-002</button>
+            <button class="doc-mini-btn" data-doc-button data-slip-no="JV-2026-0110-03" data-doc-no="D-004" data-date="2026-01-10" data-memo="外注請求 STUDIO-K" data-debit="外注費" data-credit="買掛金" data-amount="66000" data-tax="課税仕入10%" data-partner="Studio K" data-kind="請求書" data-title="外注費計上（Studio K）" data-priority="買掛金計上" data-pdf="assets/docs/D004_bill_studiok.pdf">D-004</button>
+            <button class="doc-mini-btn" data-doc-button data-slip-no="JV-2026-0112-04" data-doc-no="D-005" data-date="2026-01-12" data-memo="外注請求 TOTO" data-debit="外注費" data-credit="買掛金" data-amount="44000" data-tax="課税仕入10%" data-partner="TOTO制作" data-kind="請求書" data-title="外注費計上（TOTO）" data-priority="買掛金計上" data-pdf="assets/docs/D005_bill_toto.pdf">D-005</button>
+            <button class="doc-mini-btn" data-doc-button data-slip-no="JV-2026-0115-05" data-doc-no="D-007" data-date="2026-01-15" data-memo="1月分家賃" data-debit="地代家賃" data-credit="普通預金" data-amount="180000" data-tax="対象外" data-partner="銀座ビル管理" data-kind="請求書" data-title="家賃支払" data-priority="固定費計上" data-pdf="assets/docs/D007_rent_ginza.pdf">D-007</button>
+            <button class="doc-mini-btn" data-doc-button data-slip-no="JV-2026-0116-06" data-doc-no="D-009" data-date="2026-01-16" data-memo="交通費精算 JR" data-debit="旅費交通費" data-credit="現金" data-amount="4820" data-tax="課税仕入10%" data-partner="JR東日本" data-kind="領収書" data-title="交通費精算" data-priority="経費計上" data-pdf="assets/docs/D009_receipt_jr.pdf">D-009</button>
+            <button class="doc-mini-btn" data-doc-button data-slip-no="JV-2026-0118-07" data-doc-no="D-011" data-date="2026-01-18" data-memo="ノートPC購入（固定資産計上）" data-debit="工具器具備品" data-credit="未払金" data-amount="96000" data-tax="課税仕入10%" data-partner="PC DEPOT" data-kind="請求書" data-title="ノートPC購入" data-priority="固定資産計上" data-pdf="assets/docs/D011_pc_purchase.pdf">D-011</button>
+            <button class="doc-mini-btn" data-doc-button data-slip-no="JV-2026-0120-08" data-doc-no="D-012" data-date="2026-01-20" data-memo="年間保険料支払（前払費用）" data-debit="前払費用" data-credit="普通預金" data-amount="36000" data-tax="対象外" data-partner="東京海上サンプル" data-kind="保険証券" data-title="年間保険料支払" data-priority="前払判定" data-pdf="assets/docs/D012_insurance.pdf">D-012</button>
+            <button class="doc-mini-btn" data-doc-button data-slip-no="JV-2026-0131-09" data-doc-no="BK-001" data-date="2026-01-31" data-memo="振込手数料計上" data-debit="支払手数料" data-credit="普通預金" data-amount="440" data-tax="対象外" data-partner="みずほ銀行" data-kind="通帳明細" data-title="銀行手数料" data-priority="月末処理" data-pdf="assets/docs/BK_2026_01_statement.pdf">BK-001</button>
+            <button class="doc-mini-btn" data-doc-button data-slip-no="JV-2026-0122-10" data-doc-no="D-010" data-date="2026-01-22" data-memo="消耗品購入" data-debit="消耗品費" data-credit="現金" data-amount="3200" data-tax="課税仕入10%" data-partner="オフィスデポ" data-kind="領収書" data-title="消耗品購入" data-priority="経費計上" data-pdf="assets/docs/placeholder.pdf">D-010</button>
           </div>
-
-          <table class="table">
-            <thead><tr><th>行</th><th>勘定科目</th><th class="num">借方</th><th class="num">貸方</th><th>税区分</th><th>操作</th></tr></thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td><select><option>工具器具備品</option></select></td>
-                <td class="num"><input value="96000" /></td>
-                <td class="num"><input value="0" /></td>
-                <td><select><option>課税仕入10%</option></select></td>
-                <td><button class="btn">削除</button></td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td><select><option>未払金</option></select></td>
-                <td class="num"><input value="0" /></td>
-                <td class="num"><input value="96000" /></td>
-                <td><select><option>対象外</option></select></td>
-                <td><button class="btn">削除</button></td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div class="panel-actions" style="margin-top: 10px;">
-            <button class="btn">+ 明細行を追加</button>
-            <span class="status ok">借方合計 = 貸方合計（96,000）</span>
-          </div>
-
-          <div class="note" style="margin-top: 10px;">チェック: 1) 借貸一致 2) 税区分設定 3) 摘要に取引目的を記載 4) 証憑Noを紐付け</div>
         </div>
       </section>
 
-      <section class="grid two" style="margin-top: 14px;">
-        <article class="card">
+      <section class="journal-workspace" data-journal-workspace hidden>
+        <section class="card" style="margin-top: 14px;">
           <div class="body">
-            <h3>入力済み仕訳一覧（抜粋）</h3>
-            <table class="table">
-              <thead><tr><th>No</th><th>日付</th><th>摘要</th><th>借方</th><th>貸方</th><th class="num">金額</th><th>採点</th></tr></thead>
-              <tbody>
-                <tr><td>JE-001</td><td>2026-01-05</td><td>売上請求 INV-001</td><td>売掛金</td><td>売上高</td><td class="num">120,000</td><td><span class="status ok">正解</span></td></tr>
-                <tr><td>JE-004</td><td>2026-01-12</td><td>交通費精算</td><td>旅費交通費</td><td>現金</td><td class="num">4,820</td><td><span class="status pending">許容判定</span></td></tr>
-                <tr><td>JE-007</td><td>2026-01-20</td><td>保険料計上</td><td>保険料</td><td>普通預金</td><td class="num">36,000</td><td><span class="status ng">月ズレ</span></td></tr>
-                <tr><td>JE-010</td><td>2026-01-29</td><td>外注費支払</td><td>買掛金</td><td>普通預金</td><td class="num">60,000</td><td><span class="status ok">正解</span></td></tr>
-                <tr><td>JE-012</td><td>2026-01-31</td><td>減価償却</td><td>減価償却費</td><td>工具器具備品</td><td class="num">4,000</td><td><span class="status ok">正解</span></td></tr>
-              </tbody>
-            </table>
+            <div class="doc-focus-top">
+              <div>
+                <h3 style="margin-bottom: 4px;" data-workspace-title>対象証憑</h3>
+                <p class="muted" style="margin: 0;" data-workspace-subtitle>証憑内容を確認して仕訳入力してください。</p>
+              </div>
+              <div class="panel-actions">
+                <a class="btn" data-open-current-doc href="#" target="_blank" rel="noopener noreferrer">証憑を開く</a>
+                <a class="btn" href="scenario-reports.html">PL/BSで確認</a>
+                <button class="btn primary" data-register-button>登録して採点</button>
+              </div>
+            </div>
+            <div class="doc-focus-summary">
+              <div class="doc-pill"><span>証憑No</span><strong data-summary-doc-no>-</strong></div>
+              <div class="doc-pill"><span>種別</span><strong data-summary-kind>-</strong></div>
+              <div class="doc-pill"><span>内容</span><strong data-summary-title>-</strong></div>
+              <div class="doc-pill"><span>取引先</span><strong data-summary-partner>-</strong></div>
+              <div class="doc-pill"><span>発生日</span><strong data-summary-date>-</strong></div>
+              <div class="doc-pill"><span>金額</span><strong data-summary-amount>-</strong></div>
+              <div class="doc-pill"><span>注意</span><strong data-summary-priority>-</strong></div>
+            </div>
           </div>
-        </article>
+        </section>
 
-        <article class="card">
-          <div class="body">
-            <h3>未入力/要修正</h3>
-            <table class="table">
-              <thead><tr><th>証憑No</th><th>内容</th><th>状態</th><th>メモ</th><th>対応</th></tr></thead>
-              <tbody>
-                <tr><td>D-003</td><td>売上請求 INV-003</td><td><span class="status pending">未入力</span></td><td>計上日の確定待ち</td><td><a class="btn" href="scenario-documents.html">確認</a></td></tr>
-                <tr><td>D-005</td><td>外注請求 BILL-012</td><td><span class="status pending">未入力</span></td><td>勘定科目の判定中</td><td><a class="btn" href="scenario-documents.html">確認</a></td></tr>
-                <tr><td>D-010</td><td>消耗品購入</td><td><span class="status pending">未入力</span></td><td>未払/現金の判定待ち</td><td><a class="btn" href="scenario-bank.html">照合</a></td></tr>
-                <tr><td>JE-007</td><td>保険料計上</td><td><span class="status ng">要修正</span></td><td>前払振替の月次設定ミス</td><td><a class="btn" href="scenario-close.html">修正</a></td></tr>
-                <tr><td>JE-011</td><td>銀行手数料</td><td><span class="status ng">未起票</span></td><td>差異 330円</td><td><a class="btn" href="scenario-bank.html">起票</a></td></tr>
+        <section class="yayoi-panel" style="margin-top: 14px;">
+          <div class="yayoi-toolbar">
+            <button class="btn primary" data-register-toolbar>登録して採点</button>
+            <button class="btn" data-add-line>行追加</button>
+            <button class="btn" data-remove-line>行削除</button>
+            <span class="pill">仕訳入力</span>
+          </div>
+
+          <div class="yayoi-meta">
+            <div><label>伝票No</label><input data-journal-slip value="" /></div>
+            <div><label>摘要</label><input data-journal-memo value="" /></div>
+            <div><label>伝票日付</label><input data-journal-date type="date" value="" /></div>
+            <div><label>証憑No</label><input data-journal-doc value="" /></div>
+          </div>
+
+          <div class="yayoi-table-wrap">
+            <table class="table yayoi-table">
+              <thead>
+                <tr>
+                  <th>行</th>
+                  <th>借方科目</th>
+                  <th class="num">借方金額</th>
+                  <th>貸方科目</th>
+                  <th class="num">貸方金額</th>
+                  <th>税区分</th>
+                  <th>取引先</th>
+                  <th>補足メモ</th>
+                </tr>
+              </thead>
+              <tbody data-lines-body>
+                <tr>
+                  <td data-row-index>1</td>
+                  <td>
+                    <select data-role="debit-account">
+                      <option>(空)</option>
+                      <option>売掛金</option>
+                      <option>外注費</option>
+                      <option>地代家賃</option>
+                      <option>旅費交通費</option>
+                      <option>工具器具備品</option>
+                      <option>前払費用</option>
+                      <option>支払手数料</option>
+                      <option>消耗品費</option>
+                    </select>
+                  </td>
+                  <td class="num"><input class="entry-debit" value="0" inputmode="numeric" /></td>
+                  <td>
+                    <select data-role="credit-account">
+                      <option>(空)</option>
+                      <option>売上高</option>
+                      <option>買掛金</option>
+                      <option>未払金</option>
+                      <option>普通預金</option>
+                      <option>現金</option>
+                    </select>
+                  </td>
+                  <td class="num"><input class="entry-credit" value="0" inputmode="numeric" /></td>
+                  <td>
+                    <select data-role="tax-category">
+                      <option>対象外</option>
+                      <option>課税仕入10%</option>
+                      <option>非課税仕入</option>
+                    </select>
+                  </td>
+                  <td><input data-role="partner" value="" /></td>
+                  <td><input data-role="line-memo" value="" /></td>
+                </tr>
               </tbody>
             </table>
           </div>
-        </article>
+
+          <div class="yayoi-actions">
+            <span class="totals-chip">借方合計 <span data-total-debit>0</span></span>
+            <span class="totals-chip">貸方合計 <span data-total-credit>0</span></span>
+            <span class="status pending" data-balance-status>未入力</span>
+            <span class="status pending" data-required-status>必須項目確認中</span>
+          </div>
+        </section>
+
+        <section class="grid two" style="margin-top: 14px;">
+          <article class="card">
+            <div class="body">
+              <h3>入力チェック</h3>
+              <table class="table">
+                <thead><tr><th>項目</th><th>判定</th><th>内容</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td>貸借一致</td>
+                    <td><span class="status pending" data-check-balance>判定中</span></td>
+                    <td data-check-balance-text>借方合計と貸方合計を比較</td>
+                  </tr>
+                  <tr>
+                    <td>必須入力</td>
+                    <td><span class="status pending" data-check-required>判定中</span></td>
+                    <td data-check-required-text>伝票ヘッダ/取引先を確認</td>
+                  </tr>
+                  <tr>
+                    <td>行の状態</td>
+                    <td><span class="status pending" data-check-empty>判定中</span></td>
+                    <td data-check-empty-text>不要な空行を確認</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="grading-board">
+                <div class="pill-row">
+                  <span class="pill" data-grade-score>スコア -- / 100</span>
+                  <span class="status pending" data-grade-status>未判定</span>
+                </div>
+                <p class="muted" data-grade-message style="margin-top: 8px;">登録すると、この証憑の正誤判定が表示されます。</p>
+                <table class="table" style="margin-top: 8px;">
+                  <thead><tr><th>判定項目</th><th>結果</th></tr></thead>
+                  <tbody>
+                    <tr><td>日付</td><td data-grade-date>未判定</td></tr>
+                    <tr><td>借方/貸方科目</td><td data-grade-account>未判定</td></tr>
+                    <tr><td>金額</td><td data-grade-amount>未判定</td></tr>
+                    <tr><td>税区分</td><td data-grade-tax>未判定</td></tr>
+                    <tr><td>取引先</td><td data-grade-partner>未判定</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </article>
+
+          <article class="card tinted">
+            <div class="body">
+              <h3>学習ヒント</h3>
+              <ul class="list">
+                <li>証憑Noと摘要を先に埋めると、後工程で追跡しやすくなります。</li>
+                <li>借方/貸方が迷う場合は「増えた資産・費用は借方」で判断します。</li>
+                <li>登録前に「借方合計=貸方合計」「取引先入力あり」を確認します。</li>
+              </ul>
+            </div>
+          </article>
+        </section>
       </section>
     </main>
   </div>
-  <script src="assets/app.js"></script>
+  <script src="assets/app.js?v=20260220d"></script>
 </body>
 </html>
+
+
+
+

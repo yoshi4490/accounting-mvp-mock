@@ -1,10 +1,10 @@
-﻿<!doctype html>
+﻿﻿<!doctype html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>試算表・PL・BS | 経理実務シミュレーション</title>
-  <link rel="stylesheet" href="assets/style.css" />
+  <link rel="stylesheet" href="assets/style.css?v=20260220d" />
 </head>
 <body>
   <div class="layout">
@@ -22,6 +22,7 @@
       <nav class="nav">
         <a href="scenario-documents.html">証憑確認</a>
         <a href="scenario-journals.html">仕訳入力</a>
+        <a href="scenario-fixed-assets.html">固定資産管理</a>
         <a href="scenario-ar.html">売掛消込</a>
         <a href="scenario-ap.html">買掛消込</a>
         <a href="scenario-bank.html">銀行照合</a>
@@ -31,16 +32,16 @@
       </nav>
     </aside>
 
-    <main class="main">
+    <main class="main" data-reports-root>
       <div class="topbar">
         <div>
           <span class="badge">試算表・PL・BS</span>
-          <span class="badge ghost">更新日時 2026-02-20 11:18</span>
-          <span class="badge ghost">ステータス: 仮確定</span>
+          <span class="badge ghost" data-report-updated>更新日時 -</span>
+          <span class="badge ghost" data-report-status>ステータス: 集計待ち</span>
         </div>
         <div class="panel-actions">
+          <a class="btn" href="scenario-journals.html">仕訳入力へ戻る</a>
           <button class="btn">試算表PDF</button>
-          <button class="btn">PL/BS PDF</button>
         </div>
       </div>
 
@@ -50,20 +51,8 @@
             <h2>試算表（主要科目）</h2>
             <table class="table">
               <thead><tr><th>科目</th><th class="num">借方</th><th class="num">貸方</th></tr></thead>
-              <tbody>
-                <tr><td>現金預金</td><td class="num">208,000</td><td class="num">137,330</td></tr>
-                <tr><td>売掛金</td><td class="num">303,000</td><td class="num">215,000</td></tr>
-                <tr><td>前払費用</td><td class="num">33,000</td><td class="num">3,000</td></tr>
-                <tr><td>工具器具備品</td><td class="num">96,000</td><td class="num">4,000</td></tr>
-                <tr><td>外注費</td><td class="num">102,000</td><td class="num">0</td></tr>
-                <tr><td>地代家賃</td><td class="num">88,000</td><td class="num">0</td></tr>
-                <tr><td>通信費</td><td class="num">12,340</td><td class="num">0</td></tr>
-                <tr><td>旅費交通費</td><td class="num">4,820</td><td class="num">0</td></tr>
-                <tr><td>減価償却費</td><td class="num">4,000</td><td class="num">0</td></tr>
-                <tr><td>売上高</td><td class="num">0</td><td class="num">303,000</td></tr>
-                <tr><td>買掛金</td><td class="num">95,000</td><td class="num">137,000</td></tr>
-                <tr><td>未払金</td><td class="num">0</td><td class="num">96,000</td></tr>
-                <tr><td><strong>合計</strong></td><td class="num"><strong>945,160</strong></td><td class="num"><strong>945,160</strong></td></tr>
+              <tbody data-trial-body>
+                <tr><td colspan="3" class="muted">仕訳入力を登録すると自動集計されます。</td></tr>
               </tbody>
             </table>
           </div>
@@ -75,29 +64,33 @@
             <h3>PL（1月）</h3>
             <table class="table">
               <tbody>
-                <tr><td>売上高</td><td class="num">303,000</td></tr>
-                <tr><td>外注費</td><td class="num">-102,000</td></tr>
-                <tr><td>販売管理費</td><td class="num">-112,160</td></tr>
-                <tr><td><strong>当月利益</strong></td><td class="num"><strong>88,840</strong></td></tr>
+                <tr><td>売上高</td><td class="num" data-pl-sales>0</td></tr>
+                <tr><td>費用合計</td><td class="num" data-pl-expenses>0</td></tr>
+                <tr><td><strong>当月利益</strong></td><td class="num"><strong data-pl-profit>0</strong></td></tr>
               </tbody>
             </table>
 
             <h3 style="margin-top: 14px;">BS（1月末）</h3>
             <table class="table">
               <tbody>
-                <tr><td>流動資産</td><td class="num">391,670</td></tr>
-                <tr><td>固定資産</td><td class="num">92,000</td></tr>
-                <tr><td>流動負債</td><td class="num">138,000</td></tr>
-                <tr><td>純資産</td><td class="num">345,670</td></tr>
-                <tr><td><strong>負債純資産合計</strong></td><td class="num"><strong>483,670</strong></td></tr>
+                <tr><td>流動資産</td><td class="num" data-bs-current-assets>0</td></tr>
+                <tr><td>固定資産</td><td class="num" data-bs-fixed-assets>0</td></tr>
+                <tr><td>流動負債</td><td class="num" data-bs-liabilities>0</td></tr>
+                <tr><td>純資産（当月利益）</td><td class="num" data-bs-equity>0</td></tr>
+                <tr><td><strong>資産合計</strong></td><td class="num"><strong data-bs-assets-total>0</strong></td></tr>
+                <tr><td><strong>負債純資産合計</strong></td><td class="num"><strong data-bs-liability-equity-total>0</strong></td></tr>
               </tbody>
             </table>
-            <div class="note" style="margin-top: 10px;">差異330円（銀行手数料）が未起票のため、現在は仮確定値です。</div>
+            <div class="note" style="margin-top: 10px;" data-report-note>仕訳データ未登録のため0表示です。仕訳入力画面で登録してください。</div>
           </div>
         </article>
       </section>
     </main>
   </div>
-  <script src="assets/app.js"></script>
+  <script src="assets/app.js?v=20260220d"></script>
 </body>
 </html>
+
+
+
+
