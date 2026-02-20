@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>試算表・PL・BS | 経理実務シミュレーション</title>
-  <link rel="stylesheet" href="assets/style.css?v=20260220g" />
+  <link rel="stylesheet" href="assets/style.css?v=20260220h" />
 </head>
 <body>
   <div class="layout">
@@ -27,7 +27,7 @@
         <a href="scenario-ap.html">買掛消込</a>
         <a href="scenario-bank.html">銀行照合</a>
         <a href="scenario-close.html">月次締め</a>
-        <a href="scenario-reports.html" class="active">試算表/PL/BS</a>
+        <a href="scenario-reports.html" class="active">試算表/<abbr title="損益計算書">PL</abbr>/<abbr title="貸借対照表">BS</abbr></a>
         <a href="scenario-review.html">採点結果</a>
       </nav>
     </aside>
@@ -63,6 +63,7 @@
             <h2>PL / BS サマリー</h2>
             <h3>PL（1月）</h3>
             <table class="table">
+              <thead><tr><th>科目</th><th class="num">金額</th></tr></thead>
               <tbody>
                 <tr><td>売上高</td><td class="num" data-pl-sales>0</td></tr>
                 <tr><td>費用合計</td><td class="num" data-pl-expenses>0</td></tr>
@@ -72,6 +73,7 @@
 
             <h3 style="margin-top: 14px;">BS（1月末）</h3>
             <table class="table">
+              <thead><tr><th>科目</th><th class="num">金額</th></tr></thead>
               <tbody>
                 <tr><td>流動資産</td><td class="num" data-bs-current-assets>0</td></tr>
                 <tr><td>固定資産</td><td class="num" data-bs-fixed-assets>0</td></tr>
@@ -87,9 +89,11 @@
       </section>
     </main>
   </div>
-  <script src="assets/app.js?v=20260220g"></script>
+  <script src="assets/app.js?v=20260220h"></script>
 </body>
 </html>
+
+
 
 
 

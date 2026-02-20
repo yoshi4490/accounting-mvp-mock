@@ -562,6 +562,15 @@
     }
   }
 
+  // heading consistency for scenario pages
+  const mainRoot = document.querySelector("main.main");
+  if (mainRoot && !mainRoot.querySelector("h1")) {
+    const h1 = document.createElement("h1");
+    h1.className = "sr-only";
+    h1.textContent = String(document.title || "").split("|")[0].trim() || "経理実務シミュレーション";
+    mainRoot.prepend(h1);
+  }
+
   // legacy doc frame
   const frame = document.querySelector("[data-doc-frame]");
   const title = document.querySelector("[data-doc-title]");
