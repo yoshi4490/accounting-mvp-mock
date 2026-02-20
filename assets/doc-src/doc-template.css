@@ -167,3 +167,47 @@ body {
   color: #6b7280;
   font-size: 12px;
 }
+
+@media (max-width: 760px) {
+  body {
+    padding: 10px;
+  }
+
+  .paper {
+    padding: 14px;
+  }
+
+  .head {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .head h1 {
+    font-size: 26px;
+    letter-spacing: 0.04em;
+  }
+
+  .meta {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .parties {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .total .yen {
+    font-size: 24px;
+  }
+
+  .tbl {
+    font-size: 12px;
+  }
+
+  .tbl th,
+  .tbl td {
+    padding: 6px 6px;
+  }
+}
