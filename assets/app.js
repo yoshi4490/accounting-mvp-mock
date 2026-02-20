@@ -214,7 +214,7 @@
   const applySidebarMeta = (metrics) => {
     const brand = document.querySelector(".brand-text");
     if (brand) {
-      brand.innerHTML = "シナリオ001：サービス業<small>2026年1月</small>";
+      brand.textContent = "経理ラボ";
     }
 
     const navMap = {
