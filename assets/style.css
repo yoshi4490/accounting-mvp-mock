@@ -670,27 +670,87 @@ textarea:focus {
   font-size: 13px;
 }
 
-.dashboard-main h1 {
-  font-size: 26px;
-  margin-bottom: 6px;
+body.dashboard-page {
+  overflow: hidden;
 }
 
-.dashboard-main h2 {
-  margin-bottom: 6px;
-  font-size: 20px;
+body.dashboard-page .layout {
+  min-height: 100dvh;
+  height: 100dvh;
+}
+
+.dashboard-main {
+  height: 100dvh;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 8px;
+  padding: 0 14px 10px !important;
+}
+
+.dashboard-main .topbar {
+  position: static;
+  margin: 0;
+  padding: 6px 0;
+  border-bottom: 0;
+  background: transparent;
+  backdrop-filter: none;
+}
+
+.dashboard-frame {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1.46fr 1fr;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "next kpi"
+    "tasks learning"
+    "tasks status";
+  gap: 10px;
+}
+
+.dash-next {
+  grid-area: next;
+}
+
+.dash-kpi {
+  grid-area: kpi;
+}
+
+.dash-tasks {
+  grid-area: tasks;
+}
+
+.dash-learning {
+  grid-area: learning;
+}
+
+.dash-status {
+  grid-area: status;
 }
 
 .dashboard-main .card .body {
   padding: 10px 12px;
 }
 
-.dashboard-main .topbar {
-  position: static;
-  margin: 0 0 8px;
-  padding: 6px 0;
-  border-bottom: 0;
-  background: transparent;
-  backdrop-filter: none;
+.dashboard-main h1 {
+  font-size: 24px;
+  margin-bottom: 4px;
+  line-height: 1.16;
+}
+
+.dashboard-main h2 {
+  margin-bottom: 6px;
+  font-size: 18px;
+}
+
+.dashboard-main p {
+  margin-bottom: 8px;
+}
+
+.dashboard-main .pill {
+  padding: 4px 9px;
+  font-size: 11px;
 }
 
 .dashboard-overall-row {
@@ -698,30 +758,8 @@ textarea:focus {
 }
 
 .dashboard-main .progress-wrap {
-  margin-top: 6px;
-}
-
-.dashboard-kpis .kpi {
-  font-size: 24px;
-  margin-top: 4px;
-}
-
-.dashboard-main .table th,
-.dashboard-main .table td {
-  padding: 6px 8px;
-}
-
-.dashboard-main {
-  height: 100vh;
-  overflow: hidden;
-  display: grid;
-  grid-template-rows: auto auto auto minmax(0, 1fr);
-  gap: 10px;
-  padding-bottom: 10px !important;
-}
-
-.dashboard-main > section {
-  margin-top: 0 !important;
+  margin-top: 5px;
+  height: 8px;
 }
 
 .dashboard-main .panel-actions {
@@ -734,12 +772,69 @@ textarea:focus {
 }
 
 .dashboard-main .btn {
-  padding: 8px 11px;
+  padding: 7px 10px;
   font-size: 13px;
+}
+
+.dashboard-kpis {
+  gap: 8px;
+}
+
+.dashboard-kpis .kpi {
+  font-size: 24px;
+  margin-top: 2px;
+  line-height: 1.12;
+}
+
+.dash-inline-note {
+  margin-top: 6px;
+  padding: 8px 10px;
+  font-size: 12px;
 }
 
 .dashboard-main [data-dash-task-table] {
   table-layout: auto;
+}
+
+.dashboard-main .table {
+  font-size: 12px;
+}
+
+.dashboard-main .table th,
+.dashboard-main .table td {
+  padding: 6px 7px;
+}
+
+.dash-tasks .table td:nth-child(2),
+.dash-tasks .table td:nth-child(3) {
+  white-space: nowrap;
+}
+
+.dash-status strong {
+  font-size: 14px;
+}
+
+@media (max-width: 1280px) {
+  body.dashboard-page {
+    overflow: auto;
+  }
+
+  body.dashboard-page .layout {
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .dashboard-main {
+    height: auto;
+    overflow: visible;
+    grid-template-rows: auto auto;
+  }
+
+  .dashboard-frame {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    grid-template-areas: none;
+  }
 }
 
 .task-tag {

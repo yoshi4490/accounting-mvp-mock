@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ダッシュボード | 経理実務シミュレーション</title>
-  <link rel="stylesheet" href="assets/style.css?v=20260220p" />
+  <link rel="stylesheet" href="assets/style.css?v=20260220q" />
 </head>
-<body>
+<body class="dashboard-page">
   <div class="layout">
     <aside class="sidebar">
       <a class="brand" href="dashboard.html" aria-label="ダッシュボードへ戻る">
@@ -45,83 +45,103 @@
         </div>
       </div>
 
-      <section class="card tinted dashboard-primary">
-        <div class="body">
-          <h1>次にやる1手</h1>
-          <p class="muted" data-next-summary>優先度とブロッカー影響をもとに、今もっとも進捗が進む作業を提示します。</p>
-          <div class="pill-row" style="margin-top: 10px;">
-            <span class="pill" data-next-priority>優先度: -</span>
-            <span class="pill" data-next-eta>目安: -</span>
-            <span class="pill" data-next-reason>理由: -</span>
+      <div class="dashboard-frame">
+        <section class="card tinted dash-next">
+          <div class="body">
+            <h1>次にやる1手</h1>
+            <p class="muted" data-next-summary>優先度とブロッカー影響をもとに、今もっとも進捗が進む作業を提示します。</p>
+            <div class="pill-row" style="margin-top: 8px;">
+              <span class="pill" data-next-priority>優先度: -</span>
+              <span class="pill" data-next-eta>目安: -</span>
+              <span class="pill" data-next-reason>理由: -</span>
+            </div>
+            <div class="metric-row dashboard-overall-row">
+              <strong>全体進捗</strong>
+              <span class="muted" data-dash-overall-text>0% (0 / 0)</span>
+            </div>
+            <div class="progress-wrap"><div class="progress" data-dash-overall-progress style="width:0%"></div></div>
+            <div class="panel-actions" style="margin-top: 10px;">
+              <a class="btn primary" data-next-link href="scenario-documents.html">続きから再開</a>
+              <details class="jump-menu">
+                <summary>別ステップへ</summary>
+                <div class="jump-links">
+                  <a href="scenario-documents.html">証憑確認</a>
+                  <a href="scenario-journals.html">仕訳入力</a>
+                  <a href="scenario-fixed-assets.html">固定資産管理</a>
+                  <a href="scenario-ar.html">売掛消込</a>
+                  <a href="scenario-ap.html">買掛消込</a>
+                  <a href="scenario-bank.html">銀行照合</a>
+                  <a href="scenario-close.html">月次締め</a>
+                  <a href="scenario-reports.html">試算表/<abbr title="損益計算書">PL</abbr>/<abbr title="貸借対照表">BS</abbr></a>
+                  <a href="scenario-review.html">採点結果</a>
+                </div>
+              </details>
+            </div>
           </div>
-          <div class="metric-row dashboard-overall-row">
-            <strong>全体進捗</strong>
-            <span class="muted" data-dash-overall-text>0% (0 / 0)</span>
-          </div>
-          <div class="progress-wrap"><div class="progress" data-dash-overall-progress style="width:0%"></div></div>
-          <div class="panel-actions" style="margin-top: 12px;">
-            <a class="btn primary" data-next-link href="scenario-documents.html">続きから再開</a>
-            <details class="jump-menu">
-              <summary>別ステップへ</summary>
-              <div class="jump-links">
-                <a href="scenario-documents.html">証憑確認</a>
-                <a href="scenario-journals.html">仕訳入力</a>
-                <a href="scenario-fixed-assets.html">固定資産管理</a>
-                <a href="scenario-ar.html">売掛消込</a>
-                <a href="scenario-ap.html">買掛消込</a>
-                <a href="scenario-bank.html">銀行照合</a>
-                <a href="scenario-close.html">月次締め</a>
-                <a href="scenario-reports.html">試算表/<abbr title="損益計算書">PL</abbr>/<abbr title="貸借対照表">BS</abbr></a>
-                <a href="scenario-review.html">採点結果</a>
+        </section>
+
+        <section class="card dash-kpi">
+          <div class="body">
+            <h2>進捗と実績</h2>
+            <div class="grid three dashboard-kpis">
+              <div>
+                <div class="muted">最新スコア</div>
+                <div class="kpi" data-dash-score>--点</div>
               </div>
-            </details>
+              <div>
+                <div class="muted">仕訳登録件数</div>
+                <div class="kpi" data-dash-entry-count>0件</div>
+              </div>
+              <div>
+                <div class="muted">銀行照合</div>
+                <div class="kpi" data-dash-bank-status>--</div>
+              </div>
+            </div>
+            <div class="note dash-inline-note" data-dash-estimate-basis>見込み時間の根拠: 固定見積り（各タスク標準時間）</div>
+            <div class="note dash-inline-note" data-dash-breakdown-inline>進捗内訳: -</div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section class="grid three dashboard-kpis" style="margin-top: 14px;">
-        <article class="card">
+        <section class="card dash-tasks">
           <div class="body">
-            <div class="muted">最新スコア</div>
-            <div class="kpi" data-dash-score>--点</div>
+            <h2>今日やること（上位3件）</h2>
+            <table class="table" data-dash-task-table>
+              <thead><tr><th>タスク</th><th>状態</th><th>移動</th></tr></thead>
+              <tbody data-dash-task-body data-dash-task-compact="1">
+                <tr><td colspan="3" class="muted">タスクを読込中...</td></tr>
+              </tbody>
+            </table>
           </div>
-        </article>
+        </section>
 
-        <article class="card">
+        <section class="card dash-learning">
           <div class="body">
-            <div class="muted">仕訳登録件数</div>
-            <div class="kpi" data-dash-entry-count>0件</div>
+            <h2>学習フィードバック</h2>
+            <div class="note" data-dash-cause>ミス原因: -</div>
+            <div class="note" style="margin-top: 6px;" data-dash-prescription>次の加点ポイント: -</div>
           </div>
-        </article>
+        </section>
 
-        <article class="card">
+        <section class="card dash-status">
           <div class="body">
-            <div class="muted">銀行照合</div>
-            <div class="kpi" data-dash-bank-status>--</div>
+            <h2>締めステータス</h2>
+            <div class="metric-row" style="margin-bottom: 8px;">
+              <span class="muted">進行中ステップ</span>
+              <strong data-dash-step-inline>-</strong>
+            </div>
+            <div class="metric-row">
+              <span class="muted">提出物（必須）</span>
+              <strong data-dash-deliverable-inline>-</strong>
+            </div>
           </div>
-        </article>
-      </section>
-
-      <section class="card" style="margin-top: 14px;">
-        <div class="body">
-          <h2>今日やること（上位3件）</h2>
-          <table class="table" data-dash-task-table>
-            <thead><tr><th>タスク</th><th>状態</th><th>移動</th></tr></thead>
-            <tbody data-dash-task-body data-dash-task-compact="1">
-              <tr><td colspan="3" class="muted">タスクを読込中...</td></tr>
-            </tbody>
-          </table>
-          <div class="note" style="display:none;" data-dash-cause>ミス原因: -</div>
-          <div class="note" style="display:none;" data-dash-prescription>次の加点ポイント: -</div>
-          <div class="note" style="display:none;" data-dash-estimate-basis>見込み時間の根拠: 固定見積り（各タスク標準時間）</div>
           <div data-dash-breakdown style="display:none;"></div>
           <div data-dash-step-cards style="display:none;"></div>
           <table style="display:none;"><tbody data-dash-deliverable-body></tbody></table>
-        </div>
-      </section>
+        </section>
+      </div>
     </main>
   </div>
-  <script src="assets/app.js?v=20260220p"></script>
+  <script src="assets/app.js?v=20260220q"></script>
 </body>
 </html>
 

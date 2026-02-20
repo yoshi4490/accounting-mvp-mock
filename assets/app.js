@@ -329,6 +329,7 @@
     const overallText = dashboardRoot.querySelector("[data-dash-overall-text]");
     const overallProgress = dashboardRoot.querySelector("[data-dash-overall-progress]");
     const breakdown = dashboardRoot.querySelector("[data-dash-breakdown]");
+    const breakdownInline = dashboardRoot.querySelector("[data-dash-breakdown-inline]");
     const estimateBasis = dashboardRoot.querySelector("[data-dash-estimate-basis]");
     const scoreEl = dashboardRoot.querySelector("[data-dash-score]");
     const entryCountEl = dashboardRoot.querySelector("[data-dash-entry-count]");
@@ -337,7 +338,9 @@
     const prescriptionEl = dashboardRoot.querySelector("[data-dash-prescription]");
     const taskBody = dashboardRoot.querySelector("[data-dash-task-body]");
     const stepCards = dashboardRoot.querySelector("[data-dash-step-cards]");
+    const stepInline = dashboardRoot.querySelector("[data-dash-step-inline]");
     const deliverableBody = dashboardRoot.querySelector("[data-dash-deliverable-body]");
+    const deliverableInline = dashboardRoot.querySelector("[data-dash-deliverable-inline]");
 
     const hasFeeGap = !metrics.bankState.matches["BK-20260131-01"] &&
       !isDiffClosed(metrics.bankState.diffs["BK-20260131-01"]);
@@ -464,6 +467,10 @@
         );
       }).join("");
     }
+    if (breakdownInline) {
+      const doneSteps = metrics.steps.filter((step) => step.done).length;
+      breakdownInline.textContent = `進捗内訳: ${doneSteps}/${metrics.steps.length}ステップ完了`;
+    }
 
     if (scoreEl) {
       scoreEl.textContent = metrics.latestScore ? `${metrics.latestScore.score}点` : "--点";
@@ -559,16 +566,30 @@
       )).join("");
     }
 
+    const deliverables = [
+      { name: "試算表", required: true, done: metrics.closeDone, condition: "月次締め 6/6 完了", href: "scenario-reports.html" },
+      { name: "PL / BS", required: true, done: metrics.closeDone, condition: "月次締め 6/6 完了", href: "scenario-reports.html" },
+      { name: "銀行照合結果", required: true, done: metrics.bankUnresolved === 0, condition: "銀行差異 0 件", href: "scenario-bank.html" },
+      { name: "仕訳一覧", required: true, done: metrics.journalsDone === metrics.journalsTotal, condition: `仕訳入力 ${metrics.journalsTotal}/${metrics.journalsTotal}`, href: "scenario-journals.html" },
+      { name: "学習証跡", required: false, done: metrics.closeDone && metrics.latestScore !== null, condition: "必須成果物の確定後に出力", href: "scenario-review.html" }
+    ];
+
+    if (stepInline) {
+      const openSteps = metrics.steps.filter((step) => !step.done);
+      stepInline.textContent = openSteps.length === 0
+        ? "全ステップ完了"
+        : openSteps.slice(0, 2).map((step) => `${step.label} ${step.doneCount}/${step.total}`).join(" / ");
+    }
+
+    if (deliverableInline) {
+      const requiredItems = deliverables.filter((item) => item.required);
+      const requiredDone = requiredItems.filter((item) => item.done).length;
+      deliverableInline.textContent = `${requiredDone}/${requiredItems.length} 確定`;
+    }
+
     if (deliverableBody) {
       const requiredLabel = '<span class="deliverable-required">必須</span>';
       const optionalLabel = '<span class="deliverable-optional">任意</span>';
-      const deliverables = [
-        { name: "試算表", required: true, done: metrics.closeDone, condition: "月次締め 6/6 完了", href: "scenario-reports.html" },
-        { name: "PL / BS", required: true, done: metrics.closeDone, condition: "月次締め 6/6 完了", href: "scenario-reports.html" },
-        { name: "銀行照合結果", required: true, done: metrics.bankUnresolved === 0, condition: "銀行差異 0 件", href: "scenario-bank.html" },
-        { name: "仕訳一覧", required: true, done: metrics.journalsDone === metrics.journalsTotal, condition: `仕訳入力 ${metrics.journalsTotal}/${metrics.journalsTotal}`, href: "scenario-journals.html" },
-        { name: "学習証跡", required: false, done: metrics.closeDone && metrics.latestScore !== null, condition: "必須成果物の確定後に出力", href: "scenario-review.html" }
-      ];
       deliverableBody.innerHTML = deliverables.map((item) => (
         "<tr>" +
         `<td>${item.name}</td>` +
