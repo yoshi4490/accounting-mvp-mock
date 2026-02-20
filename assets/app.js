@@ -20,6 +20,20 @@
     "BK-001": { kind: "通帳明細", title: "銀行手数料", date: "2026-01-31", partner: "みずほ銀行", amount: 440, pdf: "assets/docs/BK_2026_01_statement.pdf" }
   };
 
+  const TRAINING_DOCS = [
+    "D-001", "D-002", "D-004", "D-005", "D-007",
+    "D-009", "D-011", "D-012", "BK-001"
+  ];
+
+  const BANK_STATEMENT_ROWS = [
+    { id: "BK-20260115-01", date: "2026-01-15", description: "銀座ビル管理 家賃振込", amount: -180000 },
+    { id: "BK-20260120-01", date: "2026-01-20", description: "東京海上サンプル 保険料", amount: -36000 },
+    { id: "BK-20260129-01", date: "2026-01-29", description: "Studio K 送金", amount: -60000 },
+    { id: "BK-20260130-01", date: "2026-01-30", description: "青葉デザイン 入金", amount: 120000 },
+    { id: "BK-20260131-01", date: "2026-01-31", description: "振込手数料", amount: -440 },
+    { id: "BK-20260204-01", date: "2026-02-04", description: "北川商店 入金", amount: 88000 }
+  ];
+
   const ORDER = [
     "現金", "普通預金", "売掛金", "前払費用", "工具器具備品",
     "減価償却累計額",
@@ -68,6 +82,161 @@
     el.classList.remove("ok", "pending", "ng");
     el.classList.add(type);
     el.textContent = txt;
+  };
+
+  const isDiffClosed = (diff) =>
+    Boolean(diff && (diff.status === "closed" || diff.status === "posted"));
+
+  const getMetrics = () => {
+    const entriesMap = read(K.entries);
+    const entries = Object.values(entriesMap);
+    const grades = read(K.grades);
+    const reviews = read(K.docReviews);
+    const fixedAssets = read(K.fixedAssets);
+    const bankState = read(K.bankRecon);
+    const matches = bankState && typeof bankState.matches === "object" ? bankState.matches : {};
+    const diffs = bankState && typeof bankState.diffs === "object" ? bankState.diffs : {};
+
+    const docsDone = TRAINING_DOCS.filter((docNo) => reviews[docNo] && reviews[docNo].completed).length;
+    const journalsDone = TRAINING_DOCS.filter((docNo) => Boolean(entriesMap[docNo])).length;
+
+    const depEntries = entries.filter((e) => e && e.source === "fixed-assets").length;
+    const fixedAssetsCount = Object.keys(fixedAssets).length;
+
+    const unresolvedStatements = BANK_STATEMENT_ROWS.filter((row) => {
+      if (matches[row.id]) return false;
+      return !isDiffClosed(diffs[row.id]);
+    });
+
+    const bankMatched = BANK_STATEMENT_ROWS.filter((row) => Boolean(matches[row.id])).length;
+    const bankUnresolved = unresolvedStatements.length;
+    const bankUnresolvedAmount = unresolvedStatements.reduce(
+      (sum, row) => sum + Math.abs(parseAmount(row.amount)),
+      0
+    );
+
+    const arTargets = ["BK-20260130-01", "BK-20260204-01"];
+    const apTargets = ["BK-20260115-01", "BK-20260120-01", "BK-20260129-01"];
+    const arDone = arTargets.filter((id) => Boolean(matches[id]) || isDiffClosed(diffs[id])).length;
+    const apDone = apTargets.filter((id) => Boolean(matches[id]) || isDiffClosed(diffs[id])).length;
+
+    const closeChecklist = [
+      { key: "docs", done: docsDone === TRAINING_DOCS.length },
+      { key: "journals", done: journalsDone === TRAINING_DOCS.length },
+      { key: "ar", done: arDone === arTargets.length },
+      { key: "ap", done: apDone === apTargets.length },
+      { key: "fixed", done: fixedAssetsCount > 0 && depEntries > 0 },
+      { key: "bank", done: bankUnresolved === 0 }
+    ];
+    const closeDoneCount = closeChecklist.filter((item) => item.done).length;
+    const closeTotal = closeChecklist.length;
+    const closeDone = closeDoneCount === closeTotal;
+
+    const steps = [
+      { key: "documents", label: "証憑確認", href: "scenario-documents.html", done: docsDone === TRAINING_DOCS.length, doneCount: docsDone, total: TRAINING_DOCS.length, blockerWeight: 8 },
+      { key: "journals", label: "仕訳入力", href: "scenario-journals.html", done: journalsDone === TRAINING_DOCS.length, doneCount: journalsDone, total: TRAINING_DOCS.length, blockerWeight: 8 },
+      { key: "fixed", label: "固定資産管理", href: "scenario-fixed-assets.html", done: fixedAssetsCount > 0 && depEntries > 0, doneCount: Math.min(depEntries, 1), total: 1, blockerWeight: 7 },
+      { key: "ar", label: "売掛消込", href: "scenario-ar.html", done: arDone === arTargets.length, doneCount: arDone, total: arTargets.length, blockerWeight: 9 },
+      { key: "ap", label: "買掛消込", href: "scenario-ap.html", done: apDone === apTargets.length, doneCount: apDone, total: apTargets.length, blockerWeight: 9 },
+      { key: "bank", label: "銀行照合", href: "scenario-bank.html", done: bankUnresolved === 0, doneCount: bankMatched, total: BANK_STATEMENT_ROWS.length, blockerWeight: 10 },
+      { key: "close", label: "月次締め", href: "scenario-close.html", done: closeDone, doneCount: closeDoneCount, total: closeTotal, blockerWeight: 10 },
+      { key: "reports", label: "試算表/PL/BS", href: "scenario-reports.html", done: closeDone && entries.length > 0, doneCount: closeDone && entries.length > 0 ? 1 : 0, total: 1, blockerWeight: 6 }
+    ];
+
+    const overallDone = steps.filter((step) => step.done).length;
+    const overallTotal = steps.length;
+    const overallRate = Math.round((overallDone / Math.max(overallTotal, 1)) * 100);
+
+    let latestScore = null;
+    let latestScoreDocNo = "";
+    let latestScoreAt = 0;
+    entries.forEach((entry) => {
+      if (!entry || !entry.docNo) return;
+      const ts = new Date(entry.savedAt || 0).getTime();
+      if (!Number.isFinite(ts) || ts <= 0) return;
+      const grade = grades[entry.docNo];
+      if (!grade) return;
+      if (ts > latestScoreAt) {
+        latestScoreAt = ts;
+        latestScore = grade;
+        latestScoreDocNo = entry.docNo;
+      }
+    });
+
+    const remainingDocs = Math.max(TRAINING_DOCS.length - docsDone, 0);
+    const remainingJournals = Math.max(TRAINING_DOCS.length - journalsDone, 0);
+    const remainingAr = Math.max(arTargets.length - arDone, 0);
+    const remainingAp = Math.max(apTargets.length - apDone, 0);
+    const remainingFixed = fixedAssetsCount > 0 && depEntries > 0 ? 0 : 1;
+    const remainingBank = bankUnresolved;
+    const remainingClose = Math.max(closeTotal - closeDoneCount, 0);
+
+    const remainingMins =
+      remainingDocs * 2 +
+      remainingJournals * 3 +
+      remainingAr * 5 +
+      remainingAp * 5 +
+      remainingFixed * 8 +
+      remainingBank * 4 +
+      remainingClose * 2;
+
+    return {
+      docsDone,
+      docsTotal: TRAINING_DOCS.length,
+      journalsDone,
+      journalsTotal: TRAINING_DOCS.length,
+      fixedAssetsCount,
+      depEntries,
+      bankMatched,
+      bankTotal: BANK_STATEMENT_ROWS.length,
+      bankUnresolved,
+      bankUnresolvedAmount,
+      arDone,
+      arTotal: arTargets.length,
+      apDone,
+      apTotal: apTargets.length,
+      closeDone,
+      closeDoneCount,
+      closeTotal,
+      steps,
+      overallDone,
+      overallTotal,
+      overallRate,
+      entriesCount: entries.length,
+      latestScore,
+      latestScoreDocNo,
+      remainingMins,
+      estimateBasis: "固定見積り（各タスク標準時間: 証憑2分・仕訳3分・消込5分）",
+      bankState: { matches, diffs }
+    };
+  };
+
+  const applySidebarMeta = (metrics) => {
+    const brand = document.querySelector(".brand-text");
+    if (brand) {
+      brand.innerHTML = "シナリオ001：サービス業<small>2026年1月</small>";
+    }
+
+    const navMap = {
+      "scenario-documents.html": `${metrics.docsDone}/${metrics.docsTotal}`,
+      "scenario-journals.html": `${metrics.journalsDone}/${metrics.journalsTotal}`,
+      "scenario-fixed-assets.html": `${Math.min(metrics.depEntries, 1)}/1`,
+      "scenario-ar.html": `${metrics.arDone}/${metrics.arTotal}`,
+      "scenario-ap.html": `${metrics.apDone}/${metrics.apTotal}`,
+      "scenario-bank.html": `${metrics.bankTotal - metrics.bankUnresolved}/${metrics.bankTotal}`,
+      "scenario-close.html": `${metrics.closeDoneCount}/${metrics.closeTotal}`
+    };
+
+    document.querySelectorAll(".nav a").forEach((link) => {
+      const old = link.querySelector(".nav-count");
+      if (old) old.remove();
+      const href = String(link.getAttribute("href") || "").split("?")[0];
+      if (!navMap[href]) return;
+      const badge = document.createElement("span");
+      badge.className = "nav-count";
+      badge.textContent = navMap[href];
+      link.appendChild(badge);
+    });
   };
 
   // menu
@@ -132,6 +301,8 @@
     });
   }
 
+  applySidebarMeta(getMetrics());
+
   document.querySelectorAll(".card, .landing-header, .step").forEach((el, i) => {
     el.classList.add("reveal");
     setTimeout(() => el.classList.add("show"), 40 + i * 26);
@@ -143,6 +314,253 @@
     bar.style.width = "0";
     requestAnimationFrame(() => (bar.style.width = m[1]));
   });
+
+  // dashboard page
+  const dashboardRoot = document.querySelector("[data-dashboard-root]");
+  if (dashboardRoot) {
+    const metrics = getMetrics();
+    const openTasksBadge = dashboardRoot.querySelector("[data-dash-open-tasks]");
+    const estimateBadge = dashboardRoot.querySelector("[data-dash-estimate]");
+    const nextSummary = dashboardRoot.querySelector("[data-next-summary]");
+    const nextPriority = dashboardRoot.querySelector("[data-next-priority]");
+    const nextEta = dashboardRoot.querySelector("[data-next-eta]");
+    const nextReason = dashboardRoot.querySelector("[data-next-reason]");
+    const nextLink = dashboardRoot.querySelector("[data-next-link]");
+    const overallText = dashboardRoot.querySelector("[data-dash-overall-text]");
+    const overallProgress = dashboardRoot.querySelector("[data-dash-overall-progress]");
+    const breakdown = dashboardRoot.querySelector("[data-dash-breakdown]");
+    const estimateBasis = dashboardRoot.querySelector("[data-dash-estimate-basis]");
+    const scoreEl = dashboardRoot.querySelector("[data-dash-score]");
+    const entryCountEl = dashboardRoot.querySelector("[data-dash-entry-count]");
+    const bankStatusEl = dashboardRoot.querySelector("[data-dash-bank-status]");
+    const causeEl = dashboardRoot.querySelector("[data-dash-cause]");
+    const prescriptionEl = dashboardRoot.querySelector("[data-dash-prescription]");
+    const taskBody = dashboardRoot.querySelector("[data-dash-task-body]");
+    const stepCards = dashboardRoot.querySelector("[data-dash-step-cards]");
+    const deliverableBody = dashboardRoot.querySelector("[data-dash-deliverable-body]");
+
+    const hasFeeGap = !metrics.bankState.matches["BK-20260131-01"] &&
+      !isDiffClosed(metrics.bankState.diffs["BK-20260131-01"]);
+    const hasPrepaidAdjust = Object.values(read(K.entries)).some((entry) =>
+      String(entry.memo || "").includes("前払振替") || String(entry.docNo || "").includes("ADJ-PREPAID")
+    );
+    const memoMissingCount = Object.values(read(K.entries)).reduce((sum, entry) => {
+      if (!entry || !Array.isArray(entry.lines)) return sum;
+      return sum + entry.lines.filter((line) => {
+        const amt = parseAmount(line.debit) + parseAmount(line.credit);
+        return amt > 0 && !String(line.memo || "").trim();
+      }).length;
+    }, 0);
+
+    const tasks = [
+      {
+        key: "ar-inv-002",
+        type: "消込",
+        priority: "高",
+        title: "INV-002 入金消込",
+        condition: "売掛残高 88,000 が 0 になる",
+        eta: 5,
+        done: metrics.arDone >= 2,
+        reason: "未消込だと月次締めが進まない",
+        href: "scenario-ar.html?focus=INV-002"
+      },
+      {
+        key: "bank-fee",
+        type: "起票",
+        priority: "高",
+        title: "振込手数料を処理",
+        condition: "銀行照合の未解決件数が 0 件",
+        eta: 3,
+        done: !hasFeeGap,
+        reason: "銀行照合のブロッカー",
+        href: "scenario-bank.html?focus=BK-20260131-01"
+      },
+      {
+        key: "prepaid-adjust",
+        type: "振替",
+        priority: "中",
+        title: "前払保険料の月次振替",
+        condition: "前払振替仕訳が1件登録される",
+        eta: 4,
+        done: hasPrepaidAdjust,
+        reason: "計上月ミスを減らせる",
+        href: "scenario-close.html?focus=前払"
+      },
+      {
+        key: "memo-fix",
+        type: "修正",
+        priority: "中",
+        title: "摘要の記載不足を修正",
+        condition: "摘要空欄が 0 件",
+        eta: 6,
+        done: memoMissingCount === 0,
+        reason: "採点の減点要因",
+        href: "scenario-journals.html?focus=摘要"
+      },
+      {
+        key: "deliverable-check",
+        type: "出力",
+        priority: "低",
+        title: "提出物の最終確認",
+        condition: "必須成果物がすべて確定",
+        eta: 7,
+        done: metrics.closeDone && metrics.bankUnresolved === 0,
+        reason: "提出前チェック",
+        href: "scenario-reports.html"
+      }
+    ];
+
+    const priorityWeight = { 高: 3, 中: 2, 低: 1 };
+    const nextTask = tasks
+      .filter((task) => !task.done)
+      .sort((a, b) => priorityWeight[b.priority] - priorityWeight[a.priority] || a.eta - b.eta)[0];
+
+    const remainingTasks = tasks.filter((task) => !task.done);
+    if (openTasksBadge) {
+      openTasksBadge.textContent = `未完了タスク: ${remainingTasks.length}件`;
+    }
+    if (estimateBadge) {
+      estimateBadge.textContent = `完了見込み: あと${metrics.remainingMins}分`;
+    }
+    if (estimateBasis) {
+      estimateBasis.textContent = `見込み時間の根拠: ${metrics.estimateBasis}`;
+    }
+
+    if (nextTask) {
+      if (nextSummary) nextSummary.textContent = `次は「${nextTask.title}」を進めましょう。`;
+      if (nextPriority) nextPriority.textContent = `優先度: ${nextTask.priority}`;
+      if (nextEta) nextEta.textContent = `目安: ${nextTask.eta}分`;
+      if (nextReason) nextReason.textContent = `理由: ${nextTask.reason}`;
+      if (nextLink instanceof HTMLAnchorElement) {
+        nextLink.textContent = `続きから再開（${nextTask.title}）`;
+        nextLink.href = nextTask.href;
+      }
+    } else {
+      if (nextSummary) nextSummary.textContent = "主要タスクは完了しています。提出物の確定に進んでください。";
+      if (nextPriority) nextPriority.textContent = "優先度: -";
+      if (nextEta) nextEta.textContent = "目安: 3分";
+      if (nextReason) nextReason.textContent = "理由: 提出前の最終確認";
+      if (nextLink instanceof HTMLAnchorElement) {
+        nextLink.textContent = "続きから再開（提出物確認）";
+        nextLink.href = "scenario-reports.html";
+      }
+    }
+
+    if (overallText) {
+      overallText.textContent = `${metrics.overallRate}%（${metrics.overallDone} / ${metrics.overallTotal}ステップ）`;
+    }
+    if (overallProgress instanceof HTMLElement) {
+      overallProgress.style.width = `${metrics.overallRate}%`;
+    }
+    if (breakdown) {
+      breakdown.innerHTML = metrics.steps.map((step) => {
+        const st = step.done ? '<span class="status ok">完了</span>' : '<span class="status pending">未完了</span>';
+        return (
+          "<div class=\"dash-breakdown-row\">" +
+          `<span>${step.label}</span>` +
+          `<span>${step.doneCount}/${step.total}</span>` +
+          `<span>${st}</span>` +
+          "</div>"
+        );
+      }).join("");
+    }
+
+    if (scoreEl) {
+      scoreEl.textContent = metrics.latestScore ? `${metrics.latestScore.score}点` : "--点";
+    }
+    if (entryCountEl) {
+      entryCountEl.textContent = `${metrics.entriesCount}件`;
+    }
+    if (bankStatusEl) {
+      bankStatusEl.textContent = metrics.bankUnresolved === 0 ? "完了" : `未解決${metrics.bankUnresolved}件`;
+    }
+
+    if (causeEl && prescriptionEl) {
+      if (!metrics.latestScore) {
+        causeEl.textContent = "ミス原因: まだ採点データがありません。";
+        prescriptionEl.textContent = "次の加点ポイント: 証憑1件を入力して採点を実行しましょう。";
+      } else {
+        const c = metrics.latestScore.criteria || {};
+        const misses = [];
+        if (!c.dateOk) misses.push("計上月判定");
+        if (!c.accountOk) misses.push("勘定科目");
+        if (!c.amountOk) misses.push("金額");
+        if (!c.taxOk) misses.push("税区分");
+        if (!c.partnerOk) misses.push("取引先");
+        const topMiss = misses[0] || "摘要";
+        causeEl.textContent = `ミス原因: ${topMiss}の判定で減点（最新: ${metrics.latestScoreDocNo || "-"}）。`;
+        prescriptionEl.textContent = `次の加点ポイント: ${topMiss}ルールを1問復習して再入力（+5〜10点見込み）。`;
+      }
+    }
+
+    if (taskBody) {
+      const statusBadge = (done) => done ? '<span class="status ok">✅完了</span>' : '<span class="status pending">未完了</span>';
+      const rows = tasks.map((task) => (
+        `<tr class="task-row-link${task.done ? " is-done" : ""}" tabindex="0" role="link" data-task-href="${task.href}">` +
+        `<td><span class="task-tag">${task.type}</span><span class="task-priority">${task.priority}</span></td>` +
+        `<td>${task.title}</td>` +
+        `<td>${task.condition}</td>` +
+        `<td>${statusBadge(task.done)}</td>` +
+        `<td>${task.eta}分</td>` +
+        "</tr>"
+      ));
+      taskBody.innerHTML = rows.join("");
+
+      const activateRow = (row) => {
+        if (!(row instanceof HTMLElement)) return;
+        const href = row.getAttribute("data-task-href");
+        if (!href) return;
+        window.location.href = href;
+      };
+
+      taskBody.querySelectorAll(".task-row-link").forEach((row) => {
+        row.addEventListener("click", () => activateRow(row));
+        row.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            activateRow(row);
+          }
+        });
+      });
+    }
+
+    if (stepCards) {
+      const sorted = metrics.steps.slice().sort((a, b) => {
+        if (a.done !== b.done) return a.done ? 1 : -1;
+        return b.blockerWeight - a.blockerWeight;
+      });
+      stepCards.innerHTML = sorted.map((step) => (
+        `<article class="card ${step.done ? "" : "tinted"}">` +
+        "<div class=\"body\">" +
+        `<h3>${step.label}</h3>` +
+        `<div class="kpi">${step.doneCount}/${step.total}</div>` +
+        `${step.done ? '<span class="status ok">完了</span>' : '<span class="status pending">要対応</span>'}` +
+        `<div class="panel-actions" style="margin-top: 10px;"><a class="btn" href="${step.href}">開く</a></div>` +
+        "</div></article>"
+      )).join("");
+    }
+
+    if (deliverableBody) {
+      const requiredLabel = '<span class="deliverable-required">必須</span>';
+      const optionalLabel = '<span class="deliverable-optional">任意</span>';
+      const deliverables = [
+        { name: "試算表", required: true, done: metrics.closeDone, condition: "月次締め 6/6 完了", href: "scenario-reports.html" },
+        { name: "PL / BS", required: true, done: metrics.closeDone, condition: "月次締め 6/6 完了", href: "scenario-reports.html" },
+        { name: "銀行照合結果", required: true, done: metrics.bankUnresolved === 0, condition: "銀行差異 0 件", href: "scenario-bank.html" },
+        { name: "仕訳一覧", required: true, done: metrics.journalsDone === metrics.journalsTotal, condition: `仕訳入力 ${metrics.journalsTotal}/${metrics.journalsTotal}`, href: "scenario-journals.html" },
+        { name: "学習証跡", required: false, done: metrics.closeDone && metrics.latestScore !== null, condition: "必須成果物の確定後に出力", href: "scenario-review.html" }
+      ];
+      deliverableBody.innerHTML = deliverables.map((item) => (
+        "<tr>" +
+        `<td>${item.name}</td>` +
+        `<td>${item.required ? requiredLabel : optionalLabel}</td>` +
+        `<td>${item.done ? '<span class="status ok">確定</span>' : '<span class="status pending">下書き</span>'}</td>` +
+        `<td>${item.condition}</td>` +
+        `<td><a class="btn" href="${item.href}">開く</a></td>` +
+        "</tr>"
+      )).join("");
+    }
+  }
 
   // legacy doc frame
   const frame = document.querySelector("[data-doc-frame]");
@@ -816,14 +1234,7 @@
     const diffReason = bankRoot.querySelector("[data-bank-diff-reason]");
     const diffNote = bankRoot.querySelector("[data-bank-diff-note]");
 
-    const statementRows = [
-      { id: "BK-20260115-01", date: "2026-01-15", description: "銀座ビル管理 家賃振込", amount: -180000 },
-      { id: "BK-20260120-01", date: "2026-01-20", description: "東京海上サンプル 保険料", amount: -36000 },
-      { id: "BK-20260129-01", date: "2026-01-29", description: "Studio K 送金", amount: -60000 },
-      { id: "BK-20260130-01", date: "2026-01-30", description: "青葉デザイン 入金", amount: 120000 },
-      { id: "BK-20260131-01", date: "2026-01-31", description: "振込手数料", amount: -440 },
-      { id: "BK-20260204-01", date: "2026-02-04", description: "北川商店 入金", amount: 88000 }
-    ];
+    const statementRows = BANK_STATEMENT_ROWS.map((row) => ({ ...row }));
 
     const seedLedgerRows = [
       { id: "S-001", date: "2026-01-15", memo: "1月分家賃支払", amount: -180000, counter: "地代家賃", docNo: "D-007", source: "seed" },
@@ -1365,8 +1776,27 @@
 
     ledgerRows = buildLedgerRows();
     sanitizeBankState();
+    const bankFocus = (new URLSearchParams(window.location.search).get("focus") || "").toUpperCase();
+    if (bankFocus) {
+      const focused = statementRows.find((row) =>
+        row.id.toUpperCase() === bankFocus ||
+        row.description.toUpperCase().includes(bankFocus)
+      );
+      if (focused) selectedStatementId = focused.id;
+    }
     setMessage("pending", "通帳明細と普通預金元帳を選択して照合してください。");
     renderAll();
+  }
+
+  // generic focus highlight from dashboard links
+  const focusText = (new URLSearchParams(window.location.search).get("focus") || "").toUpperCase();
+  if (focusText) {
+    const rows = Array.from(document.querySelectorAll("table tbody tr"));
+    const hit = rows.find((row) => String(row.textContent || "").toUpperCase().includes(focusText));
+    if (hit instanceof HTMLTableRowElement) {
+      hit.classList.add("row-focus");
+      hit.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
   }
 
   // fixed assets page
