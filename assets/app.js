@@ -113,7 +113,11 @@
     const btn = document.createElement("button");
     btn.className = "menu-toggle";
     btn.type = "button";
-    btn.textContent = "メニュー";
+    btn.setAttribute("aria-label", "メニューを開く");
+    btn.innerHTML =
+      '<span class="menu-toggle-icon" aria-hidden="true">' +
+      "<span></span><span></span><span></span>" +
+      "</span>";
     btn.addEventListener("click", () => document.body.classList.toggle("nav-open"));
     const first = topbar.firstElementChild;
     topbar.prepend(left);
