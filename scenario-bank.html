@@ -1,0 +1,97 @@
+﻿<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>銀行照合 | 経理実務シミュレーション</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="brand" href="dashboard.html" aria-label="ダッシュボードへ戻る">
+        <span class="brand-mark"><img src="assets/logo.svg" alt="" /></span>
+        <span class="brand-text">経理実務Sim<small>Scenario 001 / 2026-01</small></span>
+      </a>
+      <div class="nav-label">メイン</div>
+      <nav class="nav">
+        <a href="dashboard.html">ダッシュボード</a>
+        <a href="scenario.html">シナリオ概要</a>
+      </nav>
+      <div class="nav-label">作業フロー</div>
+      <nav class="nav">
+        <a href="scenario-documents.html">証憑確認</a>
+        <a href="scenario-journals.html">仕訳入力</a>
+        <a href="scenario-ar.html">売掛消込</a>
+        <a href="scenario-ap.html">買掛消込</a>
+        <a href="scenario-bank.html" class="active">銀行照合</a>
+        <a href="scenario-close.html">月次締め</a>
+        <a href="scenario-reports.html">試算表/PL/BS</a>
+        <a href="scenario-review.html">採点結果</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <span class="badge">銀行照合</span>
+          <span class="badge ghost">一致 5件 / 差異 1件</span>
+          <span class="badge ghost">差異金額: 330円</span>
+        </div>
+        <div class="panel-actions">
+          <button class="btn warn">差異仕訳を起票</button>
+          <a class="btn" href="scenario-close.html">締めチェックへ</a>
+        </div>
+      </div>
+
+      <section class="card">
+        <div class="body">
+          <h2>通帳明細と元帳の突合</h2>
+          <p class="muted">差異は発生日・金額・摘要から原因を特定し、仕訳起票または理由記録でクローズします。</p>
+          <table class="table">
+            <thead><tr><th>日付</th><th>通帳摘要</th><th class="num">通帳</th><th class="num">帳簿</th><th class="num">差異</th><th>状態</th><th>備考</th></tr></thead>
+            <tbody>
+              <tr><td>2026-01-29</td><td>Studio K 送金</td><td class="num">-60,000</td><td class="num">-60,000</td><td class="num">0</td><td><span class="status ok">一致</span></td><td>BILL-011</td></tr>
+              <tr><td>2026-01-30</td><td>青葉商事 入金</td><td class="num">120,000</td><td class="num">120,000</td><td class="num">0</td><td><span class="status ok">一致</span></td><td>INV-001</td></tr>
+              <tr><td>2026-01-31</td><td>クラウド印刷 送金</td><td class="num">-35,000</td><td class="num">-35,000</td><td class="num">0</td><td><span class="status ok">一致</span></td><td>BILL-013</td></tr>
+              <tr><td>2026-01-31</td><td>振込手数料</td><td class="num">-330</td><td class="num">0</td><td class="num">-330</td><td><span class="status ng">未処理</span></td><td>仕訳漏れ</td></tr>
+              <tr><td>2026-02-04</td><td>北川工業 入金</td><td class="num">88,000</td><td class="num">88,000</td><td class="num">0</td><td><span class="status ok">一致</span></td><td>INV-002</td></tr>
+              <tr><td>2026-02-09</td><td>東都デザイン 送金</td><td class="num">-42,000</td><td class="num">-42,000</td><td class="num">0</td><td><span class="status ok">一致</span></td><td>BILL-012</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="grid two" style="margin-top: 14px;">
+        <article class="card">
+          <div class="body">
+            <h3>差異対応メモ</h3>
+            <table class="table">
+              <thead><tr><th>差異ID</th><th>内容</th><th>推奨仕訳</th><th>状態</th></tr></thead>
+              <tbody>
+                <tr><td>BK-001</td><td>振込手数料 330円</td><td>支払手数料 330 / 普通預金 330</td><td><span class="status ng">未起票</span></td></tr>
+              </tbody>
+            </table>
+            <div class="note" style="margin-top: 10px;">この差異を起票すると銀行照合は完了（差異0件）になります。</div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="body">
+            <h3>照合ログ</h3>
+            <table class="table">
+              <thead><tr><th>日時</th><th>処理</th><th>結果</th></tr></thead>
+              <tbody>
+                <tr><td>2026-02-20 10:02</td><td>1回目自動突合</td><td><span class="status pending">差異1件</span></td></tr>
+                <tr><td>2026-02-20 10:04</td><td>請求Noで手動再突合</td><td><span class="status ok">5件一致</span></td></tr>
+                <tr><td>2026-02-20 10:05</td><td>差異原因特定</td><td><span class="status ok">仕訳漏れ判明</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+  <script src="assets/app.js"></script>
+</body>
+</html>

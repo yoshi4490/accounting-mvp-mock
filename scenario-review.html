@@ -1,0 +1,101 @@
+﻿<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>採点結果 | 経理実務シミュレーション</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="brand" href="dashboard.html" aria-label="ダッシュボードへ戻る">
+        <span class="brand-mark"><img src="assets/logo.svg" alt="" /></span>
+        <span class="brand-text">経理実務Sim<small>Scenario 001 / 2026-01</small></span>
+      </a>
+      <div class="nav-label">メイン</div>
+      <nav class="nav">
+        <a href="dashboard.html">ダッシュボード</a>
+        <a href="scenario.html">シナリオ概要</a>
+      </nav>
+      <div class="nav-label">作業フロー</div>
+      <nav class="nav">
+        <a href="scenario-documents.html">証憑確認</a>
+        <a href="scenario-journals.html">仕訳入力</a>
+        <a href="scenario-ar.html">売掛消込</a>
+        <a href="scenario-ap.html">買掛消込</a>
+        <a href="scenario-bank.html">銀行照合</a>
+        <a href="scenario-close.html">月次締め</a>
+        <a href="scenario-reports.html">試算表/PL/BS</a>
+        <a href="scenario-review.html" class="active">採点結果</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <span class="badge">採点結果</span>
+          <span class="badge ghost">再挑戦 1回</span>
+          <span class="badge ghost">評価日時 2026-02-20 11:20</span>
+        </div>
+        <a class="btn primary" href="dashboard.html">ダッシュボードへ</a>
+      </div>
+
+      <section class="grid three">
+        <article class="card"><div class="body"><div class="muted">総合スコア</div><div class="kpi">74 / 100</div><span class="status pending">再挑戦推奨</span></div></article>
+        <article class="card"><div class="body"><div class="muted">正解件数</div><div class="kpi">15 / 20</div><p class="muted">完全一致 + 許容判定を含む</p></div></article>
+        <article class="card"><div class="body"><div class="muted">所要時間</div><div class="kpi">52分</div><p class="muted">前回 64分から改善</p></div></article>
+      </section>
+
+      <section class="grid two" style="margin-top: 14px;">
+        <article class="card">
+          <div class="body">
+            <h2>不一致一覧</h2>
+            <table class="table">
+              <thead><tr><th>No</th><th>論点</th><th>判定</th><th>解説</th></tr></thead>
+              <tbody>
+                <tr><td>JE-007</td><td>保険料の前払振替</td><td><span class="status ng">計上月誤り</span></td><td>2月分を1月費用に計上。前払費用で保持が必要。</td></tr>
+                <tr><td>JE-011</td><td>振込手数料</td><td><span class="status ng">仕訳漏れ</span></td><td>銀行差異 330円に対する起票が未実施。</td></tr>
+                <tr><td>JE-014</td><td>交通費精算</td><td><span class="status pending">科目揺れ</span></td><td>旅費交通費/通信交通費のどちらでも許容対象。</td></tr>
+                <tr><td>JE-016</td><td>固定資産摘要</td><td><span class="status pending">摘要不足</span></td><td>用途・証憑Noの追記で満点判定。</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="body">
+            <h2>ミス分類</h2>
+            <table class="table">
+              <thead><tr><th>分類</th><th class="num">件数</th><th>優先度</th><th>改善策</th></tr></thead>
+              <tbody>
+                <tr><td>計上月の判定</td><td class="num">2</td><td>高</td><td>月末時点の費用帰属を確認</td></tr>
+                <tr><td>銀行差異の未処理</td><td class="num">1</td><td>高</td><td>照合後に差異仕訳を即起票</td></tr>
+                <tr><td>摘要の記載不足</td><td class="num">1</td><td>中</td><td>取引目的+証憑Noを記載</td></tr>
+                <tr><td>科目選択の揺れ</td><td class="num">1</td><td>中</td><td>許容ルールを確認して統一</td></tr>
+              </tbody>
+            </table>
+            <div class="note" style="margin-top: 10px;">次回目標: 差異仕訳と前払振替を修正して 85点以上。</div>
+          </div>
+        </article>
+      </section>
+
+      <section class="card" style="margin-top: 14px;">
+        <div class="body">
+          <h3>面接で話せる実務ポイント（このシナリオ）</h3>
+          <table class="table">
+            <thead><tr><th>テーマ</th><th>説明できる内容</th></tr></thead>
+            <tbody>
+              <tr><td>証憑から仕訳</td><td>請求書・領収書・通帳明細を見て、科目/税区分/計上月を判断した。</td></tr>
+              <tr><td>消込業務</td><td>請求Noと入金明細を突合し、期日未到来分は繰越理由を残した。</td></tr>
+              <tr><td>銀行照合</td><td>差異330円の原因を仕訳漏れと特定し、修正手順を理解した。</td></tr>
+              <tr><td>月次締め</td><td>減価償却と前払振替を含むチェックリストで締め条件を管理した。</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="assets/app.js"></script>
+</body>
+</html>

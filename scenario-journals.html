@@ -1,0 +1,127 @@
+﻿<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>仕訳入力 | 経理実務シミュレーション</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="brand" href="dashboard.html" aria-label="ダッシュボードへ戻る">
+        <span class="brand-mark"><img src="assets/logo.svg" alt="" /></span>
+        <span class="brand-text">経理実務Sim<small>Scenario 001 / 2026-01</small></span>
+      </a>
+      <div class="nav-label">メイン</div>
+      <nav class="nav">
+        <a href="dashboard.html">ダッシュボード</a>
+        <a href="scenario.html">シナリオ概要</a>
+      </nav>
+      <div class="nav-label">作業フロー</div>
+      <nav class="nav">
+        <a href="scenario-documents.html">証憑確認</a>
+        <a href="scenario-journals.html" class="active">仕訳入力</a>
+        <a href="scenario-ar.html">売掛消込</a>
+        <a href="scenario-ap.html">買掛消込</a>
+        <a href="scenario-bank.html">銀行照合</a>
+        <a href="scenario-close.html">月次締め</a>
+        <a href="scenario-reports.html">試算表/PL/BS</a>
+        <a href="scenario-review.html">採点結果</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <span class="badge">仕訳入力</span>
+          <span class="badge ghost">入力済み 15 / 20</span>
+          <span class="badge ghost">要修正 3件</span>
+        </div>
+        <div class="panel-actions">
+          <button class="btn">下書き保存</button>
+          <button class="btn primary">仕訳を保存</button>
+        </div>
+      </div>
+
+      <section class="card">
+        <div class="body">
+          <h2>仕訳入力（複合仕訳）</h2>
+          <p class="muted">証憑 D-011（ノートPC購入）を処理中。固定資産計上 + 未払計上の仕訳を作成します。</p>
+
+          <div class="form-row">
+            <div><label>伝票日付</label><input type="date" value="2026-01-18" /></div>
+            <div><label>摘要</label><input type="text" value="ノートPC購入（固定資産計上）" /></div>
+            <div><label>証憑No</label><input type="text" value="D-011" /></div>
+            <div><label>ステータス</label><input type="text" value="下書き" /></div>
+          </div>
+
+          <table class="table">
+            <thead><tr><th>行</th><th>勘定科目</th><th class="num">借方</th><th class="num">貸方</th><th>税区分</th><th>操作</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td><select><option>工具器具備品</option></select></td>
+                <td class="num"><input value="96000" /></td>
+                <td class="num"><input value="0" /></td>
+                <td><select><option>課税仕入10%</option></select></td>
+                <td><button class="btn">削除</button></td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td><select><option>未払金</option></select></td>
+                <td class="num"><input value="0" /></td>
+                <td class="num"><input value="96000" /></td>
+                <td><select><option>対象外</option></select></td>
+                <td><button class="btn">削除</button></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="panel-actions" style="margin-top: 10px;">
+            <button class="btn">+ 明細行を追加</button>
+            <span class="status ok">借方合計 = 貸方合計（96,000）</span>
+          </div>
+
+          <div class="note" style="margin-top: 10px;">チェック: 1) 借貸一致 2) 税区分設定 3) 摘要に取引目的を記載 4) 証憑Noを紐付け</div>
+        </div>
+      </section>
+
+      <section class="grid two" style="margin-top: 14px;">
+        <article class="card">
+          <div class="body">
+            <h3>入力済み仕訳一覧（抜粋）</h3>
+            <table class="table">
+              <thead><tr><th>No</th><th>日付</th><th>摘要</th><th>借方</th><th>貸方</th><th class="num">金額</th><th>採点</th></tr></thead>
+              <tbody>
+                <tr><td>JE-001</td><td>2026-01-05</td><td>売上請求 INV-001</td><td>売掛金</td><td>売上高</td><td class="num">120,000</td><td><span class="status ok">正解</span></td></tr>
+                <tr><td>JE-004</td><td>2026-01-12</td><td>交通費精算</td><td>旅費交通費</td><td>現金</td><td class="num">4,820</td><td><span class="status pending">許容判定</span></td></tr>
+                <tr><td>JE-007</td><td>2026-01-20</td><td>保険料計上</td><td>保険料</td><td>普通預金</td><td class="num">36,000</td><td><span class="status ng">月ズレ</span></td></tr>
+                <tr><td>JE-010</td><td>2026-01-29</td><td>外注費支払</td><td>買掛金</td><td>普通預金</td><td class="num">60,000</td><td><span class="status ok">正解</span></td></tr>
+                <tr><td>JE-012</td><td>2026-01-31</td><td>減価償却</td><td>減価償却費</td><td>工具器具備品</td><td class="num">4,000</td><td><span class="status ok">正解</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="body">
+            <h3>未入力/要修正</h3>
+            <table class="table">
+              <thead><tr><th>証憑No</th><th>内容</th><th>状態</th><th>メモ</th><th>対応</th></tr></thead>
+              <tbody>
+                <tr><td>D-003</td><td>売上請求 INV-003</td><td><span class="status pending">未入力</span></td><td>計上日の確定待ち</td><td><a class="btn" href="scenario-documents.html">確認</a></td></tr>
+                <tr><td>D-005</td><td>外注請求 BILL-012</td><td><span class="status pending">未入力</span></td><td>勘定科目の判定中</td><td><a class="btn" href="scenario-documents.html">確認</a></td></tr>
+                <tr><td>D-010</td><td>消耗品購入</td><td><span class="status pending">未入力</span></td><td>未払/現金の判定待ち</td><td><a class="btn" href="scenario-bank.html">照合</a></td></tr>
+                <tr><td>JE-007</td><td>保険料計上</td><td><span class="status ng">要修正</span></td><td>前払振替の月次設定ミス</td><td><a class="btn" href="scenario-close.html">修正</a></td></tr>
+                <tr><td>JE-011</td><td>銀行手数料</td><td><span class="status ng">未起票</span></td><td>差異 330円</td><td><a class="btn" href="scenario-bank.html">起票</a></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+  <script src="assets/app.js"></script>
+</body>
+</html>

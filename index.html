@@ -1,0 +1,81 @@
+﻿<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>経理実務シミュレーション | プロダクトモック</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <div class="center-shell">
+    <main class="landing">
+      <section class="landing-header">
+        <div class="pill-row">
+          <span class="pill">MVP UI v0.2</span>
+          <span class="pill">DB未接続</span>
+          <span class="pill">シナリオ: 小規模サービス業</span>
+        </div>
+        <h1 style="margin-top: 10px;">簿記知識を、採用で語れる実務経験へ</h1>
+        <p class="muted">証憑確認から仕訳・消込・銀行照合・月次締め・レポート作成まで、1か月分をブラウザ上で実践できる学習プロダクトのモックです。</p>
+        <div class="panel-actions" style="margin-top: 12px;">
+          <a class="btn primary" href="login.html">学習を開始</a>
+          <a class="btn" href="dashboard.html">ダッシュボードを見る</a>
+        </div>
+      </section>
+
+      <section class="grid three">
+        <article class="card tinted">
+          <div class="body">
+            <h3>一気通貫の実務フロー</h3>
+            <p class="muted">仕訳だけで終わらず、消込・照合・締めまで体験。面接で「月次作業の全体像」を説明しやすくなります。</p>
+          </div>
+        </article>
+        <article class="card tinted">
+          <div class="body">
+            <h3>自動採点 + ミス分類</h3>
+            <p class="muted">科目、金額、計上月、消込一致の観点で採点。弱点が定量で分かるので、再学習の優先順位を決められます。</p>
+          </div>
+        </article>
+        <article class="card tinted">
+          <div class="body">
+            <h3>成果物を証跡化</h3>
+            <p class="muted">試算表・PL・BS・仕訳一覧・締め完了状態を出力できる前提のUI。学習実績を見える化できます。</p>
+          </div>
+        </article>
+      </section>
+
+      <section class="card">
+        <div class="body">
+          <h2>MVP学習フロー</h2>
+          <div class="flow-steps">
+            <div class="step"><strong>1. 証憑確認</strong><span class="muted">請求書・領収書・通帳明細</span></div>
+            <div class="step"><strong>2. 仕訳入力</strong><span class="muted">複合仕訳対応・借貸一致チェック</span></div>
+            <div class="step"><strong>3. 消込・銀行照合</strong><span class="muted">売掛/買掛突合 + 差異原因特定</span></div>
+            <div class="step"><strong>4. 月次締め・採点</strong><span class="muted">試算表/PL/BS + ミス分類</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="body">
+          <h2>画面一覧（モックルート）</h2>
+          <div class="route-grid">
+            <a class="route-link" href="login.html">/login</a>
+            <a class="route-link" href="dashboard.html">/dashboard</a>
+            <a class="route-link" href="scenario.html">/scenario/:id</a>
+            <a class="route-link" href="scenario-documents.html">/scenario/:id/documents</a>
+            <a class="route-link" href="scenario-journals.html">/scenario/:id/journals</a>
+            <a class="route-link" href="scenario-ar.html">/scenario/:id/ar</a>
+            <a class="route-link" href="scenario-ap.html">/scenario/:id/ap</a>
+            <a class="route-link" href="scenario-bank.html">/scenario/:id/bank</a>
+            <a class="route-link" href="scenario-close.html">/scenario/:id/close</a>
+            <a class="route-link" href="scenario-reports.html">/scenario/:id/reports</a>
+            <a class="route-link" href="scenario-review.html">/scenario/:id/review</a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="assets/app.js"></script>
+</body>
+</html>

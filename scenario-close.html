@@ -1,0 +1,95 @@
+﻿<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>月次締め | 経理実務シミュレーション</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="brand" href="dashboard.html" aria-label="ダッシュボードへ戻る">
+        <span class="brand-mark"><img src="assets/logo.svg" alt="" /></span>
+        <span class="brand-text">経理実務Sim<small>Scenario 001 / 2026-01</small></span>
+      </a>
+      <div class="nav-label">メイン</div>
+      <nav class="nav">
+        <a href="dashboard.html">ダッシュボード</a>
+        <a href="scenario.html">シナリオ概要</a>
+      </nav>
+      <div class="nav-label">作業フロー</div>
+      <nav class="nav">
+        <a href="scenario-documents.html">証憑確認</a>
+        <a href="scenario-journals.html">仕訳入力</a>
+        <a href="scenario-ar.html">売掛消込</a>
+        <a href="scenario-ap.html">買掛消込</a>
+        <a href="scenario-bank.html">銀行照合</a>
+        <a href="scenario-close.html" class="active">月次締め</a>
+        <a href="scenario-reports.html">試算表/PL/BS</a>
+        <a href="scenario-review.html">採点結果</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <span class="badge">月次締め</span>
+          <span class="badge ghost">完了 2 / 6</span>
+          <span class="badge ghost">未完了: 証憑・仕訳・売掛・銀行</span>
+        </div>
+        <button class="btn primary">月次を締める</button>
+      </div>
+
+      <section class="grid two">
+        <article class="card">
+          <div class="body">
+            <h2>締めチェックリスト</h2>
+            <table class="table">
+              <thead><tr><th>項目</th><th>完了条件</th><th>状態</th><th>メモ</th></tr></thead>
+              <tbody>
+                <tr><td>証憑確認</td><td>24件すべて確認済み</td><td><span class="status pending">未完了</span></td><td>18/24</td></tr>
+                <tr><td>仕訳入力</td><td>借貸不一致 0件 + 必須伝票入力</td><td><span class="status pending">未完了</span></td><td>15/20</td></tr>
+                <tr><td>売掛消込</td><td>未消込 0件 または繰越理由記録</td><td><span class="status pending">未完了</span></td><td>INV-002 理由登録待ち</td></tr>
+                <tr><td>買掛消込</td><td>期日到来分を処理済</td><td><span class="status ok">完了</span></td><td>1月期日分は消込済</td></tr>
+                <tr><td>銀行照合</td><td>差異0件</td><td><span class="status pending">未完了</span></td><td>手数料330円未起票</td></tr>
+                <tr><td>決算整理</td><td>減価償却・前払振替を起票</td><td><span class="status ok">完了</span></td><td>4,000 / 3,000 計上済</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="body">
+            <h3>締め前アラート</h3>
+            <table class="table">
+              <thead><tr><th>優先度</th><th>論点</th><th>対応</th><th>遷移</th></tr></thead>
+              <tbody>
+                <tr><td>高</td><td>銀行差異 330円</td><td>支払手数料を起票</td><td><a class="btn" href="scenario-bank.html">照合へ</a></td></tr>
+                <tr><td>高</td><td>INV-002 未消込</td><td>次月繰越理由を登録</td><td><a class="btn" href="scenario-ar.html">消込へ</a></td></tr>
+                <tr><td>中</td><td>証憑 D-003, D-005 未確認</td><td>証憑確認を完了</td><td><a class="btn" href="scenario-documents.html">証憑へ</a></td></tr>
+                <tr><td>中</td><td>仕訳 5件未入力</td><td>未入力伝票を起票</td><td><a class="btn" href="scenario-journals.html">仕訳へ</a></td></tr>
+              </tbody>
+            </table>
+            <div class="note" style="margin-top: 10px;">上記4点を完了すると、締め処理ボタンが有効化される想定です。</div>
+          </div>
+        </article>
+      </section>
+
+      <section class="card" style="margin-top: 14px;">
+        <div class="body">
+          <h3>決算整理サマリー</h3>
+          <table class="table">
+            <thead><tr><th>整理仕訳</th><th>借方</th><th>貸方</th><th class="num">金額</th></tr></thead>
+            <tbody>
+              <tr><td>減価償却</td><td>減価償却費</td><td>工具器具備品</td><td class="num">4,000</td></tr>
+              <tr><td>前払保険振替</td><td>保険料</td><td>前払費用</td><td class="num">3,000</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+﻿<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>シナリオ概要 | 経理実務シミュレーション</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="brand" href="dashboard.html" aria-label="ダッシュボードへ戻る">
+        <span class="brand-mark"><img src="assets/logo.svg" alt="" /></span>
+        <span class="brand-text">経理実務Sim<small>Scenario 001 / 2026-01</small></span>
+      </a>
+      <div class="nav-label">メイン</div>
+      <nav class="nav">
+        <a href="dashboard.html">ダッシュボード</a>
+        <a href="scenario.html" class="active">シナリオ概要</a>
+      </nav>
+      <div class="nav-label">作業フロー</div>
+      <nav class="nav">
+        <a href="scenario-documents.html">証憑確認</a>
+        <a href="scenario-journals.html">仕訳入力</a>
+        <a href="scenario-ar.html">売掛消込</a>
+        <a href="scenario-ap.html">買掛消込</a>
+        <a href="scenario-bank.html">銀行照合</a>
+        <a href="scenario-close.html">月次締め</a>
+        <a href="scenario-reports.html">試算表/PL/BS</a>
+        <a href="scenario-review.html">採点結果</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <span class="badge">シナリオ概要</span>
+          <span class="badge ghost">対象期間: 2026-01-01 〜 2026-01-31</span>
+          <span class="badge ghost">難易度: 初中級</span>
+        </div>
+        <div class="panel-actions">
+          <a class="btn primary" href="scenario-documents.html">証憑確認を開始</a>
+          <a class="btn" href="dashboard.html">ダッシュボードへ戻る</a>
+        </div>
+      </div>
+
+      <section class="card tinted">
+        <div class="body">
+          <h1>小規模サービス業の1か月を締める</h1>
+          <p class="muted">株式会社サンプルワークス（従業員5名）の2026年1月度を担当します。証憑確認から仕訳、売掛/買掛消込、銀行照合、決算整理、試算表/PL/BS作成までを通しで実施します。</p>
+          <div class="pill-row" style="margin-top: 10px;">
+            <span class="pill">目安 60-90分</span>
+            <span class="pill">証憑 24件</span>
+            <span class="pill">仕訳 20件</span>
+            <span class="pill">消込 7件</span>
+            <span class="pill">締め判定 6項目</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid three" style="margin-top: 14px;">
+        <article class="card">
+          <div class="body">
+            <h3>会社情報</h3>
+            <p>会社名: 株式会社サンプルワークス</p>
+            <p>業種: 受託Web制作・保守</p>
+            <p class="muted">月次締め日: 毎月末 / 消費税: 課税事業者（簡易計算は除外）</p>
+          </div>
+        </article>
+        <article class="card">
+          <div class="body">
+            <h3>取引ボリューム</h3>
+            <p>売上請求 3件（303,000円）</p>
+            <p>外注・仕入 3件（137,000円）</p>
+            <p class="muted">経費 10件（120,440円） / 固定資産 1件（96,000円）</p>
+          </div>
+        </article>
+        <article class="card">
+          <div class="body">
+            <h3>到達条件</h3>
+            <ul class="list">
+              <li>締めチェックリスト 6/6 完了</li>
+              <li>銀行照合 差異0件</li>
+              <li>採点スコア 70点以上</li>
+            </ul>
+          </div>
+        </article>
+      </section>
+
+      <section class="card" style="margin-top: 14px;">
+        <div class="body">
+          <h2>タスク順序</h2>
+          <table class="table">
+            <thead><tr><th>順序</th><th>タスク</th><th>完了条件</th><th>想定時間</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>証憑確認</td><td>24件の証憑内容を確認</td><td>15分</td></tr>
+              <tr><td>2</td><td>仕訳入力</td><td>借貸不一致0件 / 20仕訳入力</td><td>25分</td></tr>
+              <tr><td>3</td><td>売掛/買掛消込</td><td>7件の突合完了</td><td>10分</td></tr>
+              <tr><td>4</td><td>銀行照合</td><td>差異0件または理由登録</td><td>8分</td></tr>
+              <tr><td>5</td><td>月次締め・提出</td><td>締めチェック6/6 + レポート確認</td><td>12分</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="grid two" style="margin-top: 14px;">
+        <article class="card">
+          <div class="body">
+            <h3>主要イベント（2026年1月）</h3>
+            <table class="table">
+              <thead><tr><th>日付</th><th>イベント</th><th>主な論点</th></tr></thead>
+              <tbody>
+                <tr><td>01-05</td><td>売上請求 INV-001</td><td>売掛計上 / 摘要記載</td></tr>
+                <tr><td>01-15</td><td>外注請求 BILL-011</td><td>費用計上 / 買掛計上</td></tr>
+                <tr><td>01-18</td><td>ノートPC購入</td><td>固定資産計上</td></tr>
+                <tr><td>01-30</td><td>売掛入金（青葉商事）</td><td>請求Noとの突合</td></tr>
+                <tr><td>01-31</td><td>月末整理仕訳</td><td>減価償却 / 前払振替</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="body">
+            <h3>採点基準（MVP）</h3>
+            <table class="table">
+              <thead><tr><th>観点</th><th>配点</th><th>判定</th></tr></thead>
+              <tbody>
+                <tr><td>仕訳完全一致</td><td>50点</td><td>日付/借貸科目/金額</td></tr>
+                <tr><td>消込一致</td><td>20点</td><td>請求Noと入出金明細</td></tr>
+                <tr><td>銀行照合</td><td>15点</td><td>差異の解消または理由記録</td></tr>
+                <tr><td>締めチェック完了</td><td>10点</td><td>6項目すべて完了</td></tr>
+                <tr><td>摘要品質</td><td>5点</td><td>キーワード記載</td></tr>
+              </tbody>
+            </table>
+            <div class="note" style="margin-top: 10px;">面接で説明できる状態: 「何を見て、どう判断し、どこでミスしたか」を言語化できること。</div>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+  <script src="assets/app.js"></script>
+</body>
+</html>

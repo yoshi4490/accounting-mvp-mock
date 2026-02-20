@@ -1,0 +1,64 @@
+﻿<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ログイン | 経理実務シミュレーション</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <div class="login-wrap">
+    <section class="login-card">
+      <div class="login-left">
+        <span class="badge" style="background: rgba(255,255,255,0.1); border-color: rgba(219,247,234,0.4); color:#dcfce8;">実務再現モード</span>
+        <h1 class="login-title" style="margin-top: 14px;">経理の現場を、
+          安全に反復練習する</h1>
+        <p class="login-sub">未経験者向けに、証憑から月次締めまでの手順を「業務順」で体験。採点結果と改善履歴をそのまま学習証跡に使えます。</p>
+
+        <div class="grid two" style="margin-top: 18px;">
+          <div class="note" style="background: rgba(255,255,255,0.1); border-color: rgba(216,245,230,0.4); color:#e7fff1;">
+            <strong>学習内容</strong>
+            <p style="margin-top: 6px; color: #e7fff1;">仕訳 / AR / AP / 銀行照合 / 決算整理 / 試算表</p>
+          </div>
+          <div class="note" style="background: rgba(255,255,255,0.1); border-color: rgba(216,245,230,0.4); color:#e7fff1;">
+            <strong>対象レベル</strong>
+            <p style="margin-top: 6px; color: #e7fff1;">簿記3級〜2級 学習済み</p>
+          </div>
+        </div>
+
+        <div class="pill-row" style="margin-top: 14px;">
+          <span class="pill" style="background: rgba(255,255,255,0.12); border-color: rgba(221,248,236,0.35); color:#e9fff3;">1シナリオ 60-90分</span>
+          <span class="pill" style="background: rgba(255,255,255,0.12); border-color: rgba(221,248,236,0.35); color:#e9fff3;">自動採点</span>
+          <span class="pill" style="background: rgba(255,255,255,0.12); border-color: rgba(221,248,236,0.35); color:#e9fff3;">改善履歴</span>
+        </div>
+      </div>
+
+      <div class="login-right">
+        <h2>ログイン</h2>
+        <p class="muted">メールアドレスでサインイン / 初回は無料登録</p>
+
+        <div class="auth-grid">
+          <div>
+            <label>メールアドレス</label>
+            <input type="email" placeholder="you@example.com" />
+          </div>
+          <div>
+            <label>パスワード</label>
+            <input type="password" placeholder="********" />
+          </div>
+        </div>
+
+        <div class="panel-actions" style="margin-top: 16px;">
+          <a class="btn primary" href="dashboard.html">ログイン</a>
+          <button class="btn">新規登録</button>
+          <a class="btn" href="index.html">画面一覧へ戻る</a>
+        </div>
+
+        <p class="muted" style="margin-top: 12px; font-size: 13px;">モックのため認証処理は未接続。実装時は Supabase Auth を想定。</p>
+        <div class="note" style="margin-top: 10px;">面接向けに、学習履歴へ「所要時間」「ミス分類」「再挑戦後スコア」を時系列で記録するUIを前提にしています。</div>
+      </div>
+    </section>
+  </div>
+  <script src="assets/app.js"></script>
+</body>
+</html>
