@@ -1,57 +1,39 @@
-﻿﻿<!doctype html>
-<html lang='ja'>
+﻿<!doctype html>
+<html lang="ja">
 <head>
-<meta charset='utf-8'>
-<title>普通預金 通帳明細</title>
-<style>
-  @page { size: A4; margin: 14mm; }
-  body { font-family: 'Yu Gothic', 'Meiryo', sans-serif; color: #1b2a25; }
-  .sheet { border: 1px solid #b8cbc2; border-radius: 10px; padding: 18px; }
-  .head { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 14px; }
-  h1 { font-size: 24px; margin:0 0 8px; }
-  .badge { font-size: 11px; border:1px solid #aac5b8; padding:3px 8px; border-radius:999px; color:#205340; }
-  .box { border:1px solid #cfddd6; border-radius:8px; padding:10px; margin:8px 0; }
-  .label { color:#4e625b; font-size:12px; }
-  .amount { font-size:32px; font-weight:700; color:#0f6f50; }
-  .tbl { width:100%; border-collapse:collapse; margin-top:10px; }
-  .tbl th,.tbl td { border:1px solid #d7e3dd; padding:8px; font-size:12px; }
-  .tbl th { background:#eff6f2; text-align:left; }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>普通預金取引明細 2026-01</title>
+  <link rel="stylesheet" href="doc-template.css" />
 </head>
 <body>
-  <div class='sheet'>
-    <div class='head'>
-      <div>
-        <h1>普通預金 通帳明細</h1>
-        <span class='badge'>ダミー証憑 / 学習用</span>
-      </div>
-      <div style='text-align:right;'>
-        <div class='label'>発行日</div><div>2026-01-31</div>
-        <div class='label' style='margin-top:6px;'>支払期日</div><div>-</div>
-      </div>
+  <main class="paper">
+    <div class="bank-title">
+      <h1>普通預金 取引明細（2026年1月）</h1>
+      <span class="badge">学習用通帳明細</span>
     </div>
 
-    <div class='box'><div class='label'>発行元</div><div><strong>みらい銀行</strong></div></div>
-    <div class='box'><div class='label'>宛先</div><div><strong>株式会社サンプルワークス</strong></div></div>
-
-    <div class='box'>
-      <div class='label'>件名 / 内容</div>
-      <div>2026-01-01 〜 2026-01-31</div>
-      <div class='label' style='margin-top:8px;'>備考</div>
-      <div>差異: 振込手数料 330円</div>
+    <div class="box">
+      <h2>口座情報</h2>
+      <p><strong>金融機関:</strong> みずほ銀行 本店営業部</p>
+      <p><strong>口座名義:</strong> 株式会社サンプルワークス</p>
+      <p><strong>口座番号:</strong> 普通 1234567</p>
     </div>
 
-    <div class='box'>
-      <div class='label'>請求金額</div>
-      <div class='amount'>期間内入出金 円</div>
-    </div>
+    <table class="tbl">
+      <thead>
+        <tr><th style="width:120px;">日付</th><th>摘要</th><th style="width:130px;" class="num">入金</th><th style="width:130px;" class="num">出金</th><th style="width:140px;" class="num">残高</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>2026-01-15</td><td>銀座ビル管理 家賃振込</td><td class='num'></td><td class='num'>180,000</td><td class='num'>820,000</td></tr>
+        <tr><td>2026-01-20</td><td>東京海上サンプル 保険料</td><td class='num'></td><td class='num'>36,000</td><td class='num'>784,000</td></tr>
+        <tr><td>2026-01-29</td><td>Studio K 送金</td><td class='num'></td><td class='num'>60,000</td><td class='num'>724,000</td></tr>
+        <tr><td>2026-01-30</td><td>青葉デザイン 入金</td><td class='num'>120,000</td><td class='num'></td><td class='num'>844,000</td></tr>
+        <tr><td>2026-01-31</td><td>振込手数料</td><td class='num'></td><td class='num'>440</td><td class='num'>843,560</td></tr>
+      </tbody>
+    </table>
 
-          <table class='tbl'>
-        <tr><th>日付</th><th>摘要</th><th>入金</th><th>出金</th></tr>
-        <tr><td>1/29</td><td>Studio K 送金</td><td></td><td>60,000</td></tr>
-        <tr><td>1/30</td><td>青葉商事 入金</td><td>120,000</td><td></td></tr>
-        <tr><td>1/31</td><td>振込手数料</td><td></td><td>330</td></tr>
-      </table>
-  </div>
+    <div class="footer">この証憑は経理学習用に作成した擬似データです。</div>
+  </main>
 </body>
 </html>

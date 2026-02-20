@@ -1,52 +1,83 @@
-﻿﻿<!doctype html>
-<html lang='ja'>
+﻿<!doctype html>
+<html lang="ja">
 <head>
-<meta charset='utf-8'>
-<title>保険料払込証券</title>
-<style>
-  @page { size: A4; margin: 14mm; }
-  body { font-family: 'Yu Gothic', 'Meiryo', sans-serif; color: #1b2a25; }
-  .sheet { border: 1px solid #b8cbc2; border-radius: 10px; padding: 18px; }
-  .head { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 14px; }
-  h1 { font-size: 24px; margin:0 0 8px; }
-  .badge { font-size: 11px; border:1px solid #aac5b8; padding:3px 8px; border-radius:999px; color:#205340; }
-  .box { border:1px solid #cfddd6; border-radius:8px; padding:10px; margin:8px 0; }
-  .label { color:#4e625b; font-size:12px; }
-  .amount { font-size:32px; font-weight:700; color:#0f6f50; }
-  .tbl { width:100%; border-collapse:collapse; margin-top:10px; }
-  .tbl th,.tbl td { border:1px solid #d7e3dd; padding:8px; font-size:12px; }
-  .tbl th { background:#eff6f2; text-align:left; }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>請求書 INS-2026</title>
+  <link rel="stylesheet" href="doc-template.css" />
 </head>
 <body>
-  <div class='sheet'>
-    <div class='head'>
+  <main class="paper">
+    <div class="head">
       <div>
-        <h1>保険料払込証券</h1>
-        <span class='badge'>ダミー証憑 / 学習用</span>
+        <h1>請求書</h1>
+        <div class="doc-no">請求書番号: INS-2026</div>
+        <div style="margin-top:6px;"><span class="badge">適格請求書等保存方式 対応（学習用テンプレート）</span></div>
       </div>
-      <div style='text-align:right;'>
-        <div class='label'>発行日</div><div>2026-01-20</div>
-        <div class='label' style='margin-top:6px;'>支払期日</div><div>2026-01-20</div>
+      <div class="meta">
+        <dl>
+          <dt>発行日</dt><dd>2026-01-20</dd>
+          <dt>支払期限</dt><dd>2026-01-20</dd>
+          <dt>対象期間</dt><dd>2026/01/01〜2026/12/31</dd>
+          <dt>通貨</dt><dd>JPY</dd>
+        </dl>
       </div>
     </div>
 
-    <div class='box'><div class='label'>発行元</div><div><strong>第一保険</strong></div></div>
-    <div class='box'><div class='label'>宛先</div><div><strong>株式会社サンプルワークス</strong></div></div>
+    <section class="parties">
+      <div class="box">
+        <h2>請求先</h2>
+        <p><strong>株式会社サンプルワークス 御中</strong></p>
+        <p>東京都中央区銀座1-2-3</p>
+      </div>
+      <div class="box">
+        <h2>発行元</h2>
+        <p><strong>東京海上サンプル株式会社</strong></p>
+        <p>東京都千代田区丸の内1-1-1</p>
+        <p>適格請求書発行事業者登録番号: T6234567890123</p>
+      </div>
+    </section>
 
-    <div class='box'>
-      <div class='label'>件名 / 内容</div>
-      <div>事務所火災保険（12か月）</div>
-      <div class='label' style='margin-top:8px;'>備考</div>
-      <div>前払費用対象</div>
-    </div>
+    <section class="total">
+      <strong>ご請求金額（税込）</strong>
+      <div class="yen">¥ 36,000</div>
+    </section>
 
-    <div class='box'>
-      <div class='label'>請求金額</div>
-      <div class='amount'>36,000 円</div>
-    </div>
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th style="width:42px;">No</th>
+          <th>品目</th>
+          <th style="width:64px;" class="num">数量</th>
+          <th style="width:72px;">単位</th>
+          <th style="width:110px;" class="num">単価（税抜）</th>
+          <th style="width:66px;">税率</th>
+          <th style="width:112px;" class="num">金額（税抜）</th>
+          <th style="width:90px;" class="num">消費税額</th>
+          <th style="width:112px;" class="num">金額（税込）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>事業保険料 年額</td><td class='num'>1</td><td>式</td><td class='num'>36,000</td><td>非課税</td><td class='num'>36,000</td><td class='num'>0</td><td class='num'>36,000</td></tr>
+      </tbody>
+    </table>
 
-    
-  </div>
+    <section class="summary">
+      <table>
+        <tr><th>10%対象（税抜）</th><td>¥ 0</td></tr>
+        <tr><th>消費税額（10%）</th><td>¥ 0</td></tr>
+        <tr><th>非課税対象（税抜）</th><td>¥ 36,000</td></tr>
+        <tr><th>合計（税込）</th><td>¥ 36,000</td></tr>
+      </table>
+    </section>
+
+    <section class="notes">
+      <div><strong>件名:</strong> 事業保険料（年額）</div>
+      <div><strong>支払方法:</strong> 口座振替</div>
+      <div><strong>備考:</strong> 保険料は非課税取引。</div>
+    </section>
+
+    <div class="footer">この証憑は経理学習用に作成した擬似データです。</div>
+  </main>
 </body>
 </html>

@@ -8,16 +8,16 @@
   };
 
   const DOC_MASTER = {
-    "D-001": { kind: "請求書", title: "売上請求（青葉）", date: "2026-01-05", partner: "青葉デザイン", amount: 120000, pdf: "assets/docs/D001_invoice_aoba.pdf" },
-    "D-002": { kind: "請求書", title: "売上請求（北川）", date: "2026-01-09", partner: "北川商店", amount: 88000, pdf: "assets/docs/D002_invoice_kitagawa.pdf" },
-    "D-004": { kind: "請求書", title: "外注費計上（Studio K）", date: "2026-01-15", partner: "Studio K", amount: 66000, pdf: "assets/docs/D004_bill_studiok.pdf" },
-    "D-005": { kind: "請求書", title: "外注費計上（TOTO）", date: "2026-01-22", partner: "TOTO制作", amount: 44000, pdf: "assets/docs/D005_bill_toto.pdf" },
-    "D-007": { kind: "請求書", title: "家賃支払", date: "2026-01-15", partner: "銀座ビル管理", amount: 180000, pdf: "assets/docs/D007_rent_ginza.pdf" },
-    "D-009": { kind: "領収書", title: "交通費精算", date: "2026-01-12", partner: "JR東日本", amount: 4820, pdf: "assets/docs/D009_receipt_jr.pdf" },
-    "D-010": { kind: "領収書", title: "消耗品購入", date: "2026-01-22", partner: "オフィスデポ", amount: 3200, pdf: "assets/docs/placeholder.pdf" },
-    "D-011": { kind: "請求書", title: "ノートPC購入", date: "2026-01-18", partner: "PC DEPOT", amount: 96000, pdf: "assets/docs/D011_pc_purchase.pdf" },
-    "D-012": { kind: "保険証券", title: "年間保険料支払", date: "2026-01-20", partner: "東京海上サンプル", amount: 36000, pdf: "assets/docs/D012_insurance.pdf" },
-    "BK-001": { kind: "通帳明細", title: "銀行手数料", date: "2026-01-31", partner: "みずほ銀行", amount: 440, pdf: "assets/docs/BK_2026_01_statement.pdf" }
+    "D-001": { kind: "請求書", title: "売上請求（青葉）", date: "2026-01-05", partner: "青葉デザイン", amount: 120000, pdf: "assets/doc-src/D001_invoice_aoba.html" },
+    "D-002": { kind: "請求書", title: "売上請求（北川）", date: "2026-01-09", partner: "北川商店", amount: 88000, pdf: "assets/doc-src/D002_invoice_kitagawa.html" },
+    "D-004": { kind: "請求書", title: "外注費計上（Studio K）", date: "2026-01-15", partner: "Studio K", amount: 66000, pdf: "assets/doc-src/D004_bill_studiok.html" },
+    "D-005": { kind: "請求書", title: "外注費計上（TOTO）", date: "2026-01-22", partner: "TOTO制作", amount: 44000, pdf: "assets/doc-src/D005_bill_toto.html" },
+    "D-007": { kind: "請求書", title: "家賃支払", date: "2026-01-15", partner: "銀座ビル管理", amount: 180000, pdf: "assets/doc-src/D007_rent_ginza.html" },
+    "D-009": { kind: "領収書", title: "交通費精算", date: "2026-01-12", partner: "JR東日本", amount: 4820, pdf: "assets/doc-src/D009_receipt_jr.html" },
+    "D-010": { kind: "領収書", title: "消耗品購入", date: "2026-01-22", partner: "オフィスデポ", amount: 3200, pdf: "assets/doc-src/placeholder.html" },
+    "D-011": { kind: "請求書", title: "ノートPC購入", date: "2026-01-18", partner: "PC DEPOT", amount: 96000, pdf: "assets/doc-src/D011_pc_purchase.html" },
+    "D-012": { kind: "保険証券", title: "年間保険料支払", date: "2026-01-20", partner: "東京海上サンプル", amount: 36000, pdf: "assets/doc-src/D012_insurance.html" },
+    "BK-001": { kind: "通帳明細", title: "銀行手数料", date: "2026-01-31", partner: "みずほ銀行", amount: 440, pdf: "assets/doc-src/BK_2026_01_statement.html" }
   };
 
   const TRAINING_DOCS = [
@@ -2285,3 +2285,4 @@
     }
   }
 })();
+
