@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ダッシュボード | 経理実務シミュレーション</title>
-  <link rel="stylesheet" href="assets/style.css?v=20260220m" />
+  <link rel="stylesheet" href="assets/style.css?v=20260220p" />
 </head>
 <body>
   <div class="layout">
@@ -32,7 +32,7 @@
       </nav>
     </aside>
 
-    <main class="main" data-dashboard-root>
+    <main class="main dashboard-main" data-dashboard-root>
       <div class="topbar">
         <div>
           <span class="badge">学習中: シナリオ001（2026年1月）</span>
@@ -41,12 +41,11 @@
         </div>
         <div class="panel-actions">
           <a class="btn" href="scenario.html">シナリオ詳細</a>
-          <a class="btn" href="index.html">画面一覧</a>
           <a class="btn" href="login.html">ログアウト</a>
         </div>
       </div>
 
-      <section class="card tinted">
+      <section class="card tinted dashboard-primary">
         <div class="body">
           <h1>次にやる1手</h1>
           <p class="muted" data-next-summary>優先度とブロッカー影響をもとに、今もっとも進捗が進む作業を提示します。</p>
@@ -55,7 +54,12 @@
             <span class="pill" data-next-eta>目安: -</span>
             <span class="pill" data-next-reason>理由: -</span>
           </div>
-          <div class="panel-actions" style="margin-top: 14px;">
+          <div class="metric-row dashboard-overall-row">
+            <strong>全体進捗</strong>
+            <span class="muted" data-dash-overall-text>0% (0 / 0)</span>
+          </div>
+          <div class="progress-wrap"><div class="progress" data-dash-overall-progress style="width:0%"></div></div>
+          <div class="panel-actions" style="margin-top: 12px;">
             <a class="btn primary" data-next-link href="scenario-documents.html">続きから再開</a>
             <details class="jump-menu">
               <summary>別ステップへ</summary>
@@ -75,87 +79,49 @@
         </div>
       </section>
 
-      <section class="grid two" style="margin-top: 14px;">
+      <section class="grid three dashboard-kpis" style="margin-top: 14px;">
         <article class="card">
           <div class="body">
-            <h2>進捗サマリー</h2>
-            <div class="metric-row" style="margin-top: 8px;">
-              <strong>全体進捗（締め完了までのステップ達成率）</strong>
-              <span class="muted" data-dash-overall-text>0% (0 / 0)</span>
-            </div>
-            <div class="progress-wrap" style="margin-top: 6px;"><div class="progress" data-dash-overall-progress style="width:0%"></div></div>
-            <details style="margin-top: 10px;">
-              <summary class="muted" style="cursor: pointer;">内訳を表示</summary>
-              <div data-dash-breakdown class="dash-breakdown"></div>
-            </details>
-            <div class="note" style="margin-top: 10px;" data-dash-estimate-basis>見込み時間の根拠: 固定見積り（各タスク標準時間）</div>
+            <div class="muted">最新スコア</div>
+            <div class="kpi" data-dash-score>--点</div>
           </div>
         </article>
 
         <article class="card">
           <div class="body">
-            <h2>学習サマリー</h2>
-            <div class="grid three" style="margin-top: 10px;">
-              <div>
-                <div class="muted">最新スコア</div>
-                <div class="kpi" data-dash-score>--点</div>
-              </div>
-              <div>
-                <div class="muted">仕訳登録件数</div>
-                <div class="kpi" data-dash-entry-count>0件</div>
-              </div>
-              <div>
-                <div class="muted">銀行照合</div>
-                <div class="kpi" data-dash-bank-status>--</div>
-              </div>
-            </div>
-            <div class="note" style="margin-top: 12px;" data-dash-cause>ミス原因: -</div>
-            <div class="note" style="margin-top: 8px;" data-dash-prescription>次の加点ポイント: -</div>
+            <div class="muted">仕訳登録件数</div>
+            <div class="kpi" data-dash-entry-count>0件</div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="body">
+            <div class="muted">銀行照合</div>
+            <div class="kpi" data-dash-bank-status>--</div>
           </div>
         </article>
       </section>
 
       <section class="card" style="margin-top: 14px;">
         <div class="body">
-          <h2>今日やること</h2>
+          <h2>今日やること（上位3件）</h2>
           <table class="table" data-dash-task-table>
-            <thead><tr><th>種類</th><th>タスク</th><th>完了条件</th><th>状態</th><th>目安</th></tr></thead>
-            <tbody data-dash-task-body>
-              <tr><td colspan="5" class="muted">タスクを読込中...</td></tr>
+            <thead><tr><th>タスク</th><th>状態</th><th>移動</th></tr></thead>
+            <tbody data-dash-task-body data-dash-task-compact="1">
+              <tr><td colspan="3" class="muted">タスクを読込中...</td></tr>
             </tbody>
           </table>
+          <div class="note" style="display:none;" data-dash-cause>ミス原因: -</div>
+          <div class="note" style="display:none;" data-dash-prescription>次の加点ポイント: -</div>
+          <div class="note" style="display:none;" data-dash-estimate-basis>見込み時間の根拠: 固定見積り（各タスク標準時間）</div>
+          <div data-dash-breakdown style="display:none;"></div>
+          <div data-dash-step-cards style="display:none;"></div>
+          <table style="display:none;"><tbody data-dash-deliverable-body></tbody></table>
         </div>
-      </section>
-
-      <section class="grid two" style="margin-top: 14px;">
-        <article class="card">
-          <div class="body">
-            <h2>進行中ステップ（ブロッカー優先）</h2>
-            <div class="grid two" data-dash-step-cards>
-              <div class="muted">読込中...</div>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="body">
-            <h2>成果物ステータス（提出目線）</h2>
-            <table class="table" data-dash-deliverable-table>
-              <thead><tr><th>成果物</th><th>必須</th><th>状態</th><th>確定条件</th><th>確認</th></tr></thead>
-              <tbody data-dash-deliverable-body>
-                <tr><td colspan="5" class="muted">読込中...</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </article>
-      </section>
-
-      <section class="note" style="margin-top: 14px;">
-        「試算表/<abbr title="損益計算書">PL</abbr>/<abbr title="貸借対照表">BS</abbr>」の略語補足: PL = 損益計算書、BS = 貸借対照表。
       </section>
     </main>
   </div>
-  <script src="assets/app.js?v=20260220m"></script>
+  <script src="assets/app.js?v=20260220p"></script>
 </body>
 </html>
 

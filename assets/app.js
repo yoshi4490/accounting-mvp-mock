@@ -495,15 +495,34 @@
 
     if (taskBody) {
       const statusBadge = (done) => done ? '<span class="status ok">✅完了</span>' : '<span class="status pending">未完了</span>';
-      const rows = tasks.map((task) => (
-        `<tr class="task-row-link${task.done ? " is-done" : ""}" tabindex="0" role="link" data-task-href="${task.href}">` +
-        `<td><span class="task-tag">${task.type}</span><span class="task-priority">${task.priority}</span></td>` +
-        `<td>${task.title}</td>` +
-        `<td>${task.condition}</td>` +
-        `<td>${statusBadge(task.done)}</td>` +
-        `<td>${task.eta}分</td>` +
-        "</tr>"
-      ));
+      const compactMode = taskBody.hasAttribute("data-dash-task-compact");
+      const sourceTasks = compactMode
+        ? tasks
+            .slice()
+            .sort((a, b) => {
+              if (a.done !== b.done) return a.done ? 1 : -1;
+              return priorityWeight[b.priority] - priorityWeight[a.priority] || a.eta - b.eta;
+            })
+            .slice(0, 3)
+        : tasks;
+
+      const rows = compactMode
+        ? sourceTasks.map((task) => (
+            `<tr class="task-row-link${task.done ? " is-done" : ""}" tabindex="0" role="link" data-task-href="${task.href}">` +
+            `<td><span class="task-tag">${task.type}</span>${task.title}</td>` +
+            `<td>${statusBadge(task.done)}</td>` +
+            `<td><a class="btn" href="${task.href}">開く</a></td>` +
+            "</tr>"
+          ))
+        : sourceTasks.map((task) => (
+            `<tr class="task-row-link${task.done ? " is-done" : ""}" tabindex="0" role="link" data-task-href="${task.href}">` +
+            `<td><span class="task-tag">${task.type}</span><span class="task-priority">${task.priority}</span></td>` +
+            `<td>${task.title}</td>` +
+            `<td>${task.condition}</td>` +
+            `<td>${statusBadge(task.done)}</td>` +
+            `<td>${task.eta}分</td>` +
+            "</tr>"
+          ));
       taskBody.innerHTML = rows.join("");
 
       const activateRow = (row) => {
